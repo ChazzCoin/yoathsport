@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.yoath.sports">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        android:name="android.support.multidex.MultiDexApplication">
+        <activity android:name="io.yoath.sports.admin.AdminActivity"></activity>
+        <activity android:name="io.yoath.sports.ui.ProfileFragment" />
+        <activity
+            android:name="io.yoath.sports.AuthController"
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="io.yoath.sports.ui.login.LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name="io.yoath.sports.MainAdminActivity"
+            android:label="Main Admin Activity" />
+        <activity
+            android:name="io.yoath.sports.MainPendingActivity"
+            android:label="Main Pending Activity" />
+        <activity
+            android:name="io.yoath.sports.locationManager.MainLocationManagerActivity"
+            android:label="Main Location Manager Activity" />
+        <activity
+            android:name="io.yoath.sports.foodtruckManager.MainFoodTruckManagerActivity"
+            android:label="Main Food Truck Activity" />
+        <activity
+            android:name="io.yoath.sports.foodtruckManager.calendar.FoodCalendarFragment"
+            android:label="@string/title_activity_calendar_view" />
+        <activity
+            android:name="io.yoath.sports.foodtruckManager.checkout.CheckoutActivity"
+            android:label="@string/pay" />
+        <activity
+            android:name="io.yoath.sports.ui.SpotDetailsActivity"
+            android:label="Spot Details" />
+        <activity
+            android:name="io.yoath.sports.locationManager.CreateSpotActivity"
+            android:label="Create Spot" />
+    </application>
+
+</manifest>

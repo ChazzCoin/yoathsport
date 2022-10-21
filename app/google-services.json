@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "141915641617",
+    "project_id": "yoath-sports",
+    "storage_bucket": "yoath-sports.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141915641617:android:4b83889a79b667dbfe1eb0",
+        "android_client_info": {
+          "package_name": "io.yoath.sports"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141915641617-o851lmibk3sqv6idurnlioql7gh7k21c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRMmZxOKFUQ7OKoFT5W0W_ZfnP-JpAsZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141915641617-o851lmibk3sqv6idurnlioql7gh7k21c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
