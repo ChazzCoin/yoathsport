@@ -17,7 +17,7 @@ import com.google.firebase.database.*
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
-import io.yoath.sports.foodtruckManager.dashboard.FoodDashboardViewAdapter
+import io.yoath.sports.basicUser.dashboard.FoodDashboardViewAdapter
 import io.yoath.sports.locationManager.dashboard.LocDashViewAdapter
 import io.yoath.sports.utils.*
 import io.realm.RealmList
@@ -43,10 +43,10 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var eSpinSpotLocation : Spinner
     private lateinit var eSpinAdapter : ArrayAdapter<String?>
     private var spotAdapter : LocDashViewAdapter? = null
-    private var locationList : RealmList<Location> = RealmList() // -> ORIGINAL LIST
+    private var organizationList : RealmList<Organization> = RealmList() // -> ORIGINAL LIST
     private var locationNameList : ArrayList<String?> = ArrayList() // -> USED FOR INPUT DIALOG
-    private var locationMap : HashMap<Int, Location> = HashMap()
-    private var finalLocation : Location? = null
+    private var organizationMap : HashMap<Int, Organization> = HashMap()
+    private var finalOrganization : Organization? = null
 
     private var spotList: RealmList<Spot> = RealmList()
     var arrayOfSpots : ArrayList<Spot> = ArrayList()
@@ -81,9 +81,9 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun setup(user: User) {
-        if (AuthController.USER_AUTH == User.FOODTRUCK_MANAGER) { //FoodTruck Manager
+        if (AuthController.USER_AUTH == AuthTypes.BASIC_USER) { //FoodTruck Manager
             setupFoodManager(user)
-        } else if (AuthController.USER_AUTH == User.LOCATION_MANAGER) { //Location Manager
+        } else if (AuthController.USER_AUTH == AuthTypes.COACH_USER) { //Location Manager
             setupLocationManager(user)
         }
     }
@@ -96,7 +96,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         foodAdapter = FoodDashboardViewAdapter(requireContext())
         rootView.recyclerViewDashboard.adapter = foodAdapter
 
-        user.getFoodtrucksFromFirebase(requireContext(), this)
+//        user.getFoodtrucksFromFirebase(requireContext(), this)
     }
     /** LOCATION USER SETUP **/
     private fun setupLocationManager(user: User) {
@@ -105,7 +105,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         //->Spinner
         locations {
             if (!it.isNullOrEmpty()) {
-                locationList = it
+                organizationList = it
                 prepareListOfLocations()
                 eSpinAdapter = ArrayAdapter(
                     requireContext(),
@@ -124,9 +124,9 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun prepareListOfLocations() {
-        for ((i, location) in locationList.withIndex()){
-            locationNameList.add(location.locationName)
-            locationMap[i] = location
+        for ((i, location) in organizationList.withIndex()){
+            locationNameList.add(location.name)
+            organizationMap[i] = location
         }
     }
 
@@ -136,13 +136,13 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun checkSpotsForReviews() {
         when (user.auth) {
-            User.LOCATION_MANAGER -> {
+            AuthTypes.BASIC_USER -> {
                 rootView.btnReview.makeVisible()
                 rootView.btnReview.setOnClickListener {
                     createReviewDialog(requireActivity(), spot = null).show()
                 }
             }
-            User.FOODTRUCK_MANAGER -> {
+            AuthTypes.COACH_USER -> {
                 if (arrayOfSpots.isNullOrEmpty()) return
                 for (spot in arrayOfSpots) {
                     if (spot.hasReview) continue
@@ -165,10 +165,10 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun foodtruckIsValid() : Boolean {
         val trucks = Session.session?.foodtrucks
         if (trucks.isNullOrEmpty()) return false
-        for (truck in trucks!!) {
-            if (truck.truckName.isNullOrEmpty()) return false
-            if (truck.truckType.isNullOrEmpty()) return false
-        }
+//        for (truck in trucks!!) {
+//            if (truck.truckName.isNullOrEmpty()) return false
+//            if (truck.truckType.isNullOrEmpty()) return false
+//        }
         return true
     }
 
@@ -176,11 +176,11 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         //match the name of this location with locations in users locations
         (parent?.getChildAt(0) as? TextView)?.setTextColor(Color.WHITE)
-        finalLocation = locationMap[position]
-        val _id = finalLocation?.id
+        finalOrganization = organizationMap[position]
+        val _id = finalOrganization?.id
         spotAdapter?.locationId = _id ?: ""
         spotAdapter?.notifyDataSetChanged()
-        Log.d("Location From Spinner: ", finalLocation.toString())
+        Log.d("Location From Spinner: ", finalOrganization.toString())
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

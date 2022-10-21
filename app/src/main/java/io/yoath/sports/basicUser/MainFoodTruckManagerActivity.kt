@@ -1,4 +1,4 @@
-package io.yoath.sports.foodtruckManager
+package io.yoath.sports.basicUser
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView

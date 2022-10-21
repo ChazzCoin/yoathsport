@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
+import io.yoath.sports.model.AuthTypes
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.User
 import io.yoath.sports.utils.FireHelper
@@ -61,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                         saveProfileToFirebase()
                     }?: kotlin.run {
                         //No User Move On
-                        mUser.auth = User.WAITING
+                        mUser.auth = AuthTypes.BASIC_USER
                         saveProfileToFirebase()
                     }
                 }

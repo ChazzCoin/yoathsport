@@ -132,7 +132,7 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
     }
     spinTruckFoodType2.adapter = eSpinAdapter
 
-    if (user.auth != User.FOODTRUCK_MANAGER) {
+    if (user.auth != AuthTypes.BASIC_USER) {
         linearLayoutTruckInfo.visibility = View.GONE
     }
 
@@ -144,22 +144,22 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
     editEmail.isEnabled = false
     editPhoneNumber.isEnabled = false
 
-    if (user.auth == User.FOODTRUCK_MANAGER) {
-        val trucks : RealmList<FoodTruck>? = Session.session?.foodtrucks
-        if (!trucks.isNullOrEmpty()) {
-            val truck = trucks?.first()
-            editTruckName.setText(truck?.truckName)
-            spinTruckFoodType.setSelection(
-                (spinTruckFoodType.adapter as ArrayAdapter<String>).getPosition(truck?.truckType)
-            )
-            spinTruckFoodType2.setSelection(
-                (spinTruckFoodType2.adapter as ArrayAdapter<String>).getPosition(truck?.truckSubType)
-            )
-        }
-        editTruckName.isEnabled = false
-        spinTruckFoodType.isEnabled = false
-        spinTruckFoodType2.isEnabled = false
-    }
+//    if (user.auth == AuthTypes.BASIC_USER) {
+//        val trucks : RealmList<Organization>? = Session.session?.foodtrucks
+//        if (!trucks.isNullOrEmpty()) {
+//            val truck = trucks?.first()
+//            editTruckName.setText(truck?.truckName)
+//            spinTruckFoodType.setSelection(
+//                (spinTruckFoodType.adapter as ArrayAdapter<String>).getPosition(truck?.truckType)
+//            )
+//            spinTruckFoodType2.setSelection(
+//                (spinTruckFoodType2.adapter as ArrayAdapter<String>).getPosition(truck?.truckSubType)
+//            )
+//        }
+//        editTruckName.isEnabled = false
+//        spinTruckFoodType.isEnabled = false
+//        spinTruckFoodType2.isEnabled = false
+//    }
 
     // On Clicks
     val update = dialog.findViewById(R.id.btnUpdateProfile) as Button
@@ -172,7 +172,7 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
                 editProfileName.isEnabled = true
                 editEmail.isEnabled = true
                 editPhoneNumber.isEnabled = true
-                if (user.auth == User.FOODTRUCK_MANAGER) {
+                if (user.auth == AuthTypes.BASIC_USER) {
                     editTruckName.isEnabled = true
                     spinTruckFoodType.isEnabled = true
                     spinTruckFoodType2.isEnabled = true
@@ -195,7 +195,7 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
                 }
 
                 //-> FOODTRUCK
-                if (user.auth == User.FOODTRUCK_MANAGER) {
+                if (user.auth == AuthTypes.BASIC_USER) {
                     if (editTruckName.text.isNullOrEmpty()) {
                         editTruckName.setHintTextColor(Color.RED)
                         return@setOnClickListener
@@ -225,31 +225,31 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
                     newUser.addUpdateToFirebase(activity)
                 }
 
-                //-> FOODTRUCK USER
-                if (user.auth == User.FOODTRUCK_MANAGER) {
-                    val trucks : RealmList<FoodTruck>? = Session.session?.foodtrucks
-                    val newTruckName = editTruckName.text.toString()
-                    if (!trucks.isNullOrEmpty()) {
-                        val curTruck = trucks!![0] as FoodTruck
-                        val tid = curTruck.id
-                        if (foodtruckType != foodtruckType2) {
-                            FoodTruck(tid, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2)
-                                .addUpdateForFirebase(activity)
-                            dialog.dismiss()
-                        } else {
-                            //TODO: ADD POP UP FOR ERROR
-                            spinTruckFoodType.background =
-                                activity.resources.getDrawable(R.drawable.ft_border_rounded_red)
-                            spinTruckFoodType2.background =
-                                activity.resources.getDrawable(R.drawable.ft_border_rounded_red)
-                        }
-                    } else {
-                        val id = UUID.randomUUID().toString()
-                        FoodTruck(id, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2)
-                            .addUpdateForFirebase(activity)
-                        dialog.dismiss()
-                    }
-                }
+//                //-> FOODTRUCK USER
+//                if (user.auth == AuthTypes.BASIC_USER) {
+//                    val trucks : RealmList<Organization>? = Session.session?.foodtrucks
+//                    val newTruckName = editTruckName.text.toString()
+//                    if (!trucks.isNullOrEmpty()) {
+//                        val curTruck = trucks!![0] as Organization
+//                        val tid = curTruck.id
+//                        if (foodtruckType != foodtruckType2) {
+//                            Organization(tid, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2)
+//                                .addUpdateForFirebase(activity)
+//                            dialog.dismiss()
+//                        } else {
+//                            //TODO: ADD POP UP FOR ERROR
+//                            spinTruckFoodType.background =
+//                                activity.resources.getDrawable(R.drawable.ft_border_rounded_red)
+//                            spinTruckFoodType2.background =
+//                                activity.resources.getDrawable(R.drawable.ft_border_rounded_red)
+//                        }
+//                    } else {
+//                        val id = UUID.randomUUID().toString()
+//                        Organization(id, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2)
+//                            .addUpdateForFirebase(activity)
+//                        dialog.dismiss()
+//                    }
+//                }
             }
         }
     }
@@ -262,7 +262,7 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
                 editProfileName.isEnabled = false
                 editEmail.isEnabled = false
                 editPhoneNumber.isEnabled = false
-                if (user.auth == User.FOODTRUCK_MANAGER) {
+                if (user.auth == AuthTypes.BASIC_USER) {
                     editTruckName.isEnabled = false
                     spinTruckFoodType.isEnabled = false
                     spinTruckFoodType2.isEnabled = false

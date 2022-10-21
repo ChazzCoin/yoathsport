@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.yoath.sports.R
-import io.yoath.sports.model.Location
+import io.yoath.sports.model.Organization
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.createDeleteLocationDialog
 import io.yoath.sports.utils.inflate
@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.item_list_locations.view.*
 class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFragment)
     : RecyclerView.Adapter<LocManageViewAdapter.InnerLocationViewHolder>() {
 
-    var locationList : RealmList<Location>? = Session.session?.locations
-    var arrayOfLocations : ArrayList<Location> = ArrayList()
+    var organizationList : RealmList<Organization>? = Session.session?.organizations
+    var arrayOfOrganizations : ArrayList<Organization> = ArrayList()
     var context = mContext
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerLocationViewHolder {
@@ -28,7 +28,7 @@ class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFr
 
     override fun onBindViewHolder(viewHolder: InnerLocationViewHolder, position: Int) {
 
-        arrayOfLocations.let {
+        arrayOfOrganizations.let {
             it[position].let { it1 ->
                 viewHolder.bind(it1)
             }
@@ -37,19 +37,19 @@ class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFr
     }
 
     override fun getItemCount(): Int {
-        if (arrayOfLocations.isEmpty()){
+        if (arrayOfOrganizations.isEmpty()){
             reloadLocations()
         }
-        arrayOfLocations.let {
+        arrayOfOrganizations.let {
             return it.size
         }
     }
 
     private fun reloadLocations(){
-        this.locationList = Session.session?.locations
-        arrayOfLocations.clear()
-        locationList?.iterator()?.forEach { itLocation ->
-            arrayOfLocations.add(itLocation)
+        this.organizationList = Session.session?.organizations
+        arrayOfOrganizations.clear()
+        organizationList?.iterator()?.forEach { itLocation ->
+            arrayOfOrganizations.add(itLocation)
         }
     }
 
@@ -58,23 +58,23 @@ class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFr
     ) :
         RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
-        fun bind(location: Location) {
-            containerView.itemLocationName.text = location.locationName
-            containerView.txtAddressOne.text = location.addressOne
-            containerView.txtAddressTwo.text = location.addressTwo
-            containerView.txtCityStateZip.text = "${location.city}, ${location.state}, ${location.zip}"
-            containerView.txtPeople.text = location.estPeople
+        fun bind(organization: Organization) {
+            containerView.itemLocationName.text = organization.name
+            containerView.txtAddressOne.text = organization.addressOne
+            containerView.txtAddressTwo.text = organization.addressTwo
+            containerView.txtCityStateZip.text = "${organization.city}, ${organization.state}, ${organization.zip}"
+            containerView.txtPeople.text = organization.estPeople
 
             containerView.btnAddEditLocationManage.setOnClickListener {
                 locManageFragment.toggleButtons()
                 if (locManageFragment.MODE == locManageFragment._EDIT) {
-                    locManageFragment.fillAllFields(location)
+                    locManageFragment.fillAllFields(organization)
                 } else {
                     locManageFragment.clearAllFields()
                 }
             }
             containerView.btnMinusLocationManage.setOnClickListener {
-                location.createDeleteLocationDialog(locManageFragment).show()
+                organization.createDeleteLocationDialog(locManageFragment).show()
             }
         }
 

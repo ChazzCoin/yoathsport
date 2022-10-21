@@ -4,17 +4,16 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.view.View
-import android.widget.Button
 import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.yoath.sports.R
-import io.yoath.sports.foodtruckManager.calendar.FoodCalendarFragment
 import io.yoath.sports.model.Spot.Companion.AVAILABLE
 import io.yoath.sports.model.Spot.Companion.PENDING
 import io.yoath.sports.model.Spot.Companion.PENDING_CASHAPP
 import io.yoath.sports.utils.*
 import io.realm.RealmObject
+import io.yoath.sports.db.firebase
 import kotlinx.android.synthetic.main.dialog_ask_user_logout.*
 import kotlinx.android.synthetic.main.dialog_spot_details.*
 import java.text.SimpleDateFormat
@@ -230,38 +229,38 @@ fun Spot.createDetailsLocationDialog(activity: Activity) : Dialog {
 //    return dialog
 //}
 
-fun Spot.createAddToCartDialog(activity: Activity, fragment: FoodCalendarFragment, parent: Dialog) : Dialog {
-    val dialog = Dialog(activity)
-    dialog.setContentView(R.layout.dialog_ask_user_logout)
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-    dialog.txtAskUserTitle.text = "Add to Cart?"
-    dialog.txtAskUserBody.text = "Are you sure you want to add this spot to your cart?"
-    // On Clicks
-    val yes = dialog.findViewById(R.id.btnYesAskUser) as Button
-    val cancel = dialog.findViewById(R.id.btnCancelAskUser) as Button
-
-    var assignedTruckUid = "null"
-    var assignedTruckName = "null"
-    getFoodtruck()?.let {
-        assignedTruckUid = it.id ?: "null"
-        assignedTruckName = it.truckName ?: "null"
-    }
-
-    yes.setOnClickListener {
-        val spot = this
-        main {
-            addSpotToCart(spot, activity)
-            spot.updatePendingAvailableToFirebase(activity, PENDING, assignedTruckUid, assignedTruckName)
-            fragment.spotsListAdapter?.notifyDataSetChanged()
-            dialog.dismiss()
-            parent.dismiss()
-        }
-    }
-    cancel.setOnClickListener {
-        dialog.dismiss()
-    }
-    return dialog
-}
+//fun Spot.createAddToCartDialog(activity: Activity, fragment: FoodCalendarFragment, parent: Dialog) : Dialog {
+//    val dialog = Dialog(activity)
+//    dialog.setContentView(R.layout.dialog_ask_user_logout)
+//    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+//    dialog.txtAskUserTitle.text = "Add to Cart?"
+//    dialog.txtAskUserBody.text = "Are you sure you want to add this spot to your cart?"
+//    // On Clicks
+//    val yes = dialog.findViewById(R.id.btnYesAskUser) as Button
+//    val cancel = dialog.findViewById(R.id.btnCancelAskUser) as Button
+//
+//    var assignedTruckUid = "null"
+//    var assignedTruckName = "null"
+//    getFoodtruck()?.let {
+//        assignedTruckUid = it.id ?: "null"
+//        assignedTruckName = it.truckName ?: "null"
+//    }
+//
+//    yes.setOnClickListener {
+//        val spot = this
+//        main {
+//            addSpotToCart(spot, activity)
+//            spot.updatePendingAvailableToFirebase(activity, PENDING, assignedTruckUid, assignedTruckName)
+//            fragment.spotsListAdapter?.notifyDataSetChanged()
+//            dialog.dismiss()
+//            parent.dismiss()
+//        }
+//    }
+//    cancel.setOnClickListener {
+//        dialog.dismiss()
+//    }
+//    return dialog
+//}
 
 //fun Spot.createRemoveFromCartDialog(activity: Activity, fragment: FoodCartFragment, parent: Dialog) : Dialog {
 //    val dialog = Dialog(activity)

@@ -9,37 +9,43 @@ import io.yoath.sports.utils.showFailedToast
 import io.yoath.sports.utils.showSuccess
 import io.realm.Realm
 import io.realm.RealmObject
+import io.yoath.sports.model.AuthTypes.Companion.BASIC_USER
+import io.yoath.sports.model.AuthTypes.Companion.COACH_USER
+
 /**
  * Created by ChazzCoin : December 2019.
  */
-open class User(uid:String = "", name:String? = "", email:String? = "") : RealmObject() {
 
+open class AuthTypes {
     companion object {
+        // Auth Types
+        var MASTER = "master"
         var ADMIN = "admin"
-        var LOCATION_MANAGER = "location_manager"
-        var FOODTRUCK_MANAGER = "foodtruck_manager"
+        var ORG_ADMIN_USER = "org_admin"
+        var COACH_USER = "coach"
+        var PLAYER_USER = "player"
+        var PARENT_USER = "parent"
+        var BASIC_USER = "basic" // Default
         var WAITING = "waiting"
     }
+}
+
+open class User(uid:String = "", name:String? = "", email:String? = "") : RealmObject() {
 
     @PrimaryKey
-    var uid = ""
-    var name: String? = null
-    var email: String? = null
-    var auth: String? = null
-    var phone: String? = null
+    var uid = "" // SETUP VIA FIREBASE TO LINK TO AUTH SYSTEM
+    var name: String? = ""
+    var email: String? = ""
+    var auth: String = BASIC_USER // "basic"
+    var phone: String? = ""
+    var organization: String? = ""
 
-    init {
-        this.uid = uid
-        this.name = name
-        this.email = email
-        this.auth = ""
-    }
-    fun isLocationManager() : Boolean {
-        if (this.auth == LOCATION_MANAGER) return true
+    fun isCoachUser() : Boolean {
+        if (this.auth == COACH_USER) return true
         return false
     }
-    fun isFoodTruckManager() : Boolean {
-        if (this.auth == FOODTRUCK_MANAGER) return true
+    fun isBasicUser() : Boolean {
+        if (this.auth == BASIC_USER) return true
         return false
     }
 

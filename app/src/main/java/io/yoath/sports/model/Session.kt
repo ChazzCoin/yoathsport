@@ -22,9 +22,9 @@ open class Session : RealmObject() {
     var sessionId = 0
 
     //DO NOT MAKE STATIC
-    var locations: RealmList<Location>? = null
+    var organizations: RealmList<Organization>? = null
     var spots: RealmList<Spot>? = null
-    var foodtrucks: RealmList<FoodTruck>? = null
+    var foodtrucks: RealmList<Organization>? = null
 
     /** -> EVERYTHING IS STATIC BELOW THIS POINT <- **/
     companion object {
@@ -162,8 +162,8 @@ open class Session : RealmObject() {
             mRealm.executeTransaction {
                 mRealm.where(Session::class.java).findAll().deleteAllFromRealm()
                 mRealm.where(User::class.java).findAll().deleteAllFromRealm()
-                mRealm.where(Location::class.java).findAll().deleteAllFromRealm()
-                mRealm.where(FoodTruck::class.java).findAll().deleteAllFromRealm()
+                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
+                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
                 mRealm.where(Cart::class.java).findAll().deleteAllFromRealm()
                 mRealm.where(Spot::class.java).findAll().deleteAllFromRealm()
             }
@@ -179,24 +179,24 @@ open class Session : RealmObject() {
         /** -> LOCATIONS <- **/
 
         //ADD LOCATION, this should be safe
-        fun addLocation(location: Location?) {
+        fun addLocation(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
                 mRealm.beginTransaction()
-                itSession.locations?.add(location)
+                itSession.organizations?.add(organization)
                 mRealm.copyToRealmOrUpdate(session) //safe?
                 mRealm.commitTransaction()
             }
         }
 
         //REMOVE LOCATION
-        fun removeLocation(location: Location?) {
+        fun removeLocation(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
                 mRealm.beginTransaction()
-                itSession.locations?.remove(location)
+                itSession.organizations?.remove(organization)
                 mRealm.copyToRealmOrUpdate(session) //safe?
                 mRealm.commitTransaction()
             }
@@ -208,8 +208,8 @@ open class Session : RealmObject() {
             val session = session
             session?.let { itSession ->
                 mRealm.beginTransaction()
-                itSession.locations?.clear()
-                mRealm.where(Location::class.java).findAll().deleteAllFromRealm()
+                itSession.organizations?.clear()
+                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
                 mRealm.copyToRealmOrUpdate(session) //safe?
                 mRealm.commitTransaction()
             }
@@ -217,7 +217,7 @@ open class Session : RealmObject() {
 
         /** -> FOODTRUCKS <- **/
         //ADD Foodtruck, this should be safe
-        fun addFoodtruck(foodtruck: FoodTruck?) {
+        fun addFoodtruck(foodtruck: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
@@ -234,7 +234,7 @@ open class Session : RealmObject() {
             session?.let { itSession ->
                 mRealm.beginTransaction()
                 itSession.foodtrucks?.clear()
-                mRealm.where(FoodTruck::class.java).findAll().deleteAllFromRealm()
+                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
                 mRealm.copyToRealmOrUpdate(session) //safe?
                 mRealm.commitTransaction()
             }

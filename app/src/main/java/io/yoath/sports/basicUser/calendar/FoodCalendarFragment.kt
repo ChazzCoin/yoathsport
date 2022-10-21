@@ -1,4 +1,4 @@
-package io.yoath.sports.foodtruckManager.calendar
+package io.yoath.sports.basicUser.calendar
 
 import android.graphics.Color
 import android.os.Bundle

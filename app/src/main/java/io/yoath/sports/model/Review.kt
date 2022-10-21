@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.realm.RealmList
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.utils.FireHelper
@@ -26,9 +27,9 @@ import java.util.*
 open class Review : RealmObject() {
     @PrimaryKey
     var id: String = ""
-    var reviewScore: Int = 999 // score 1 or 10
-    var reviewDetails: String = "" //
-    var spotUUID: String? = ""
+    var score: Int = 999 // score 1 or 10
+    var details: String = "" //
+    var questions: RealmList<String>? = null
 }
 
 fun Review.addUpdateToFirebase(mContext:Context, spot: Spot? = null) {
@@ -96,9 +97,8 @@ fun createReviewDialog(activity: Activity, spot: Spot? = null) : Dialog {
         }?.addUpdateToFirebase(mContext = activity)
         Review().apply {
             this.id = uid
-            this.reviewScore = score
-            this.reviewDetails = details
-            this.spotUUID = spot?.id ?: ""
+            this.score = score
+            this.details = details
         }.addUpdateToFirebase(mContext = activity, spot = spot)
         dialog.dismiss()
     }

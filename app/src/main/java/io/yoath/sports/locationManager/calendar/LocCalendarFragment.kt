@@ -27,7 +27,7 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
-import io.yoath.sports.model.Location
+import io.yoath.sports.model.Organization
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.Spot
 import io.yoath.sports.model.createDetailsLocationDialog
@@ -77,9 +77,9 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
 
     //Make a Spot
     private lateinit var mThis : SpotCalendarFragmentLocation
-    private var locationMap : HashMap<Int, Location> = HashMap()
-    private var locationList : RealmList<Location> = RealmList() // -> ORIGINAL LIST
-    private var finalLocation : Location? = null
+    private var organizationMap : HashMap<Int, Organization> = HashMap()
+    private var organizationList : RealmList<Organization> = RealmList() // -> ORIGINAL LIST
+    private var finalOrganization : Organization? = null
     private var finalLocationId: String? = null
     private var locationNameList : ArrayList<String?> = ArrayList() // -> USED FOR INPUT DIALOG
 
@@ -227,7 +227,7 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
             //get new month worth of spots
             masterSpotList.clear()
             val newMonth = it.yearMonth.atDay(1).toMonthYearForFirebase() ?: ""
-            val locName = finalLocation?.locationName ?: ""
+            val locName = finalOrganization?.name ?: ""
             getSpotsFromFirebaseByLocation(newMonth, locName)
             selectDate(it.yearMonth.atDay(1))
         }
@@ -257,7 +257,7 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
     fun setupSpinners() {
         //Spinner Setup
         locations {
-            locationList = it
+            organizationList = it
             prepareListOfLocations()
             mSpinAdapter = getSimpleSpinnerAdapter(requireContext(), locationNameList)
             eSpinAdapter = getSimpleSpinnerAdapter(requireContext(), locationNameList)
@@ -277,9 +277,9 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
 
     private fun prepareListOfLocations() {
         locationNameList.clear()
-        for ((i, location) in locationList.withIndex()){
-            locationNameList.add(location.locationName)
-            locationMap[i] = location
+        for ((i, location) in organizationList.withIndex()){
+            locationNameList.add(location.name)
+            organizationMap[i] = location
         }
     }
 
@@ -421,7 +421,7 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (ds in dataSnapshot.children) {
-                        val locations: Location? = ds.getValue(Location::class.java)
+                        val locations: Organization? = ds.getValue(Organization::class.java)
                         locations?.let { Session.addLocation(it) }
                     }
                     setupSpinners()
@@ -449,11 +449,11 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         //match the name of this location with locations in users locations
-        finalLocation = locationMap[position]
-        finalLocationId = finalLocation?.id
+        finalOrganization = organizationMap[position]
+        finalLocationId = finalOrganization?.id
         clearAdapter()
-        getSpotsFromFirebaseByLocation(getMonthYearForFirebase(), finalLocation?.locationName ?: "")
-        Log.d("Location From Spinner: ", finalLocation.toString())
+        getSpotsFromFirebaseByLocation(getMonthYearForFirebase(), finalOrganization?.name ?: "")
+        Log.d("Location From Spinner: ", finalOrganization.toString())
     }
 }
 

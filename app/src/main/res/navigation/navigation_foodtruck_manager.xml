@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/navigation_spot_calendar"
-        android:name="io.yoath.sports.foodtruckManager.calendar.FoodCalendarFragment"
+        android:name="io.yoath.sports.basicUser.calendar.FoodCalendarFragment"
         android:label="@string/title_calendar"
         tools:layout="@layout/spot_calendar_fragment" />
     <fragment
@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/navigation_cart"
-        android:name="io.yoath.sports.foodtruckManager.checkout.FoodCartFragment"
+        android:name="io.yoath.sports.basicUser.checkout.FoodCartFragment"
         android:label="@string/title_cart"
         tools:layout="@layout/fragment_cart" />
 

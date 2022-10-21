@@ -20,7 +20,7 @@
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_spot_calendar"
-        android:name="io.yoath.sports.foodtruckManager.calendar.FoodCalendarFragment"
+        android:name="io.yoath.sports.basicUser.calendar.FoodCalendarFragment"
         android:label="@string/title_calendar"
         tools:layout="@layout/activity_main_empty" />
 

@@ -1,4 +1,4 @@
-package io.yoath.sports.foodtruckManager.dashboard
+package io.yoath.sports.basicUser.dashboard
 
 import android.content.Context
 import android.view.View

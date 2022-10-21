@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import io.yoath.sports.R
-import io.yoath.sports.model.Location
+import io.yoath.sports.model.Organization
 import io.yoath.sports.model.addUpdateLocationToFirebase
 import io.yoath.sports.utils.createFieldErrorDialog
 import kotlinx.android.synthetic.main.fragment_locations.view.*
@@ -25,7 +25,7 @@ class LocManageFragment : Fragment() {
     var MODE = _DISPLAY
 
     var locManageViewAdapter: LocManageViewAdapter? = null
-    var updateLocationObj: Location? = null
+    var updateOrganizationObj: Organization? = null
     lateinit var rootView : View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +59,7 @@ class LocManageFragment : Fragment() {
         val locationObj = verifyAndSetLocationInfo()
         //Create Location Object
         locationObj?.let {
-            val newLocation = Location(it.id, it.locationName,
+            val newLocation = Organization(it.id, it.name,
                 it.addressOne, it.addressTwo, it.city, it.state, it.zip, it.estPeople)
             newLocation.addUpdateLocationToFirebase(this)
             clearAllFields()
@@ -68,20 +68,20 @@ class LocManageFragment : Fragment() {
         }
     }
 
-    private fun verifyAndSetLocationInfo() : Location? {
+    private fun verifyAndSetLocationInfo() : Organization? {
         var uid = ""
-        updateLocationObj?.let { uid = it.id!! }
+        updateOrganizationObj?.let { uid = it.id!! }
         if (hasEmptyField()) return null
-        return Location().apply {
+        return Organization().apply {
             this.id = if (uid.isEmpty()) UUID.randomUUID().toString() else uid
-            this.locationName = rootView.editLocationName?.text?.toString() ?: return null
+            this.name = rootView.editLocationName?.text?.toString() ?: return null
             this.addressOne = rootView.editAddressOne?.text?.toString() ?: return null
             this.addressTwo = rootView.editAddressTwo?.text?.toString() ?: ""
             this.city = rootView.editCity?.text?.toString() ?: return null
             this.state = rootView.editState?.text?.toString() ?: return null
             this.zip = rootView.editZip?.text?.toString() ?: return null
             this.estPeople = rootView.editEstPeople?.text?.toString() ?: return null
-            if (updateLocationObj != null && updateLocationObj!!.matches(this)) {
+            if (updateOrganizationObj != null && updateOrganizationObj!!.matches(this)) {
                 //NO FIELDS HAVE CHANGED
                 return null
             }
@@ -116,19 +116,19 @@ class LocManageFragment : Fragment() {
        }
     }
 
-    fun fillAllFields(location: Location){
-        updateLocationObj = location
-        rootView.editLocationName.setText(location.locationName)
-        rootView.editAddressOne.setText(location.addressOne)
-        rootView.editAddressTwo.setText(location.addressTwo)
-        rootView.editCity.setText(location.city)
-        rootView.editState.setText(location.state)
-        rootView.editZip.setText(location.zip)
-        rootView.editEstPeople.setText(location.estPeople)
+    fun fillAllFields(organization: Organization){
+        updateOrganizationObj = organization
+        rootView.editLocationName.setText(organization.name)
+        rootView.editAddressOne.setText(organization.addressOne)
+        rootView.editAddressTwo.setText(organization.addressTwo)
+        rootView.editCity.setText(organization.city)
+        rootView.editState.setText(organization.state)
+        rootView.editZip.setText(organization.zip)
+        rootView.editEstPeople.setText(organization.estPeople)
     }
 
     fun clearAllFields(){
-        updateLocationObj = null
+        updateOrganizationObj = null
         rootView.editLocationName.text.clear()
         rootView.editAddressOne.text.clear()
         rootView.editAddressTwo.text.clear()

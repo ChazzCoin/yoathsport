@@ -3,6 +3,7 @@ package io.yoath.sports.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.yoath.sports.R
+import io.yoath.sports.model.AuthTypes
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.Spot
 import io.yoath.sports.model.User
@@ -35,7 +36,7 @@ class SpotDetailsActivity : AppCompatActivity() {
 
         Session.session?.let {
             user = Session.user
-            isLocationManager = (user?.auth == User.LOCATION_MANAGER)
+            isLocationManager = (user?.auth == AuthTypes.BASIC_USER)
             toggleGenericEditButton()
         }
 

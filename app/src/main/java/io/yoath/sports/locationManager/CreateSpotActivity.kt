@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import io.yoath.sports.R
-import io.yoath.sports.model.Location
+import io.yoath.sports.model.Organization
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.Spot
 import io.yoath.sports.model.User
@@ -33,7 +33,7 @@ class CreateSpotActivity : AppCompatActivity() {
     var user : User? = null
     var listOfSpots = RealmList<Spot>()
     private var locationId : String? = null
-    var location : Location? = null
+    var organization : Organization? = null
     private var selectedDatesList : ArrayList<LocalDate> = ArrayList()
     var foodType : String? = null
 
@@ -62,8 +62,8 @@ class CreateSpotActivity : AppCompatActivity() {
 
         Session.session?.let { itSession ->
             user = Session.user
-            itSession.locations?.let { itLocations ->
-                location = itLocations.find { it.id == locationId }
+            itSession.organizations?.let { itLocations ->
+                organization = itLocations.find { it.id == locationId }
             }
             itSession.spots?.let {
                 listOfSpots = it
@@ -122,14 +122,14 @@ class CreateSpotActivity : AppCompatActivity() {
         newSpot.id = UUID.randomUUID().toString()
         newSpot.date = _date
         newSpot.spotManager = user?.name
-        newSpot.locationName = location?.locationName
-        newSpot.locationUUID = location?.id
-        newSpot.addressOne = location?.addressOne
-        newSpot.addressTwo = location?.addressTwo
-        newSpot.city = location?.city
-        newSpot.state = location?.state
-        newSpot.zip = location?.zip
-        newSpot.parkingInfo = location?.details
+        newSpot.locationName = organization?.name
+        newSpot.locationUUID = organization?.id
+        newSpot.addressOne = organization?.addressOne
+        newSpot.addressTwo = organization?.addressTwo
+        newSpot.city = organization?.city
+        newSpot.state = organization?.state
+        newSpot.zip = organization?.zip
+        newSpot.parkingInfo = organization?.details
         newSpot.foodType = _foodType
         newSpot.mealTime = getMealTimeString()
 //        newSpot.estPeople = txtEstPeopleNewSpot.text.toString()
@@ -173,11 +173,11 @@ class CreateSpotActivity : AppCompatActivity() {
         //At least one switch is checked.
         if (!switchEntree.isChecked && !switchDessert.isChecked) return false
 //        if (txtEstPeopleNewSpot.text.isNullOrEmpty()) return false
-        if (location == null) return false
-        if (location?.addressOne.isNullOrEmpty()) return false
-        if (location?.city.isNullOrEmpty()) return false
-        if (location?.state.isNullOrEmpty()) return false
-        if (location?.zip.isNullOrEmpty()) return false
+        if (organization == null) return false
+        if (organization?.addressOne.isNullOrEmpty()) return false
+        if (organization?.city.isNullOrEmpty()) return false
+        if (organization?.state.isNullOrEmpty()) return false
+        if (organization?.zip.isNullOrEmpty()) return false
         return true
     }
 

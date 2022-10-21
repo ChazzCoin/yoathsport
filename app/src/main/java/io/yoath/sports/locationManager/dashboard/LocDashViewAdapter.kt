@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.item_list_food_spots.view.*
 class LocDashViewAdapter(mContext: Context, var activity: Activity, var locationId: String)
     : RecyclerView.Adapter<LocDashViewAdapter.InnerDashViewHolder>() {
 
-    var locationList : RealmList<Location>? = Session.session?.locations
-    var arrayOfLocations : ArrayList<Location> = ArrayList()
+    var organizationList : RealmList<Organization>? = Session.session?.organizations
+    var arrayOfOrganizations : ArrayList<Organization> = ArrayList()
 
     var spotsList : RealmList<Spot>? = RealmList<Spot>()
     var arrayOfSpots : ArrayList<Spot> = ArrayList()

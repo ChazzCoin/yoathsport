@@ -56,7 +56,7 @@ class ProfileFragment : Fragment() {
         COLOR_WHITE = ContextCompat.getDrawable(requireActivity(), R.drawable.ft_border_rounded_white)
 
         Session.session?.let { user = Session.user }
-        if (user?.auth != User.FOODTRUCK_MANAGER) {
+        if (user?.auth != AuthTypes.BASIC_USER) {
             rootView.linearLayoutTruckInfo.visibility = View.GONE
         }
 
@@ -77,48 +77,48 @@ class ProfileFragment : Fragment() {
         rootView.editPhoneNumber.setText(user?.phone)
 
         // Foodtruck User
-        if (user?.auth == User.FOODTRUCK_MANAGER) {
-            val trucks : RealmList<FoodTruck>? = Session.session?.foodtrucks
+        if (user?.auth == AuthTypes.BASIC_USER) {
+            val trucks : RealmList<Organization>? = Session.session?.foodtrucks
             val truck = trucks?.first()
             truck?.let {
-                rootView.editTruckName.setText(it.truckName)
-                rootView.spinFoodtruckType.setSelection(
-                    (rootView.spinFoodtruckType.adapter as ArrayAdapter<String>).getPosition(it.truckType)
-                )
-                rootView.spinFoodtruckType2.setSelection(
-                    (rootView.spinFoodtruckType2.adapter as ArrayAdapter<String>).getPosition(it.truckSubType)
-                )
+//                rootView.editTruckName.setText(it.truckName)
+//                rootView.spinFoodtruckType.setSelection(
+//                    (rootView.spinFoodtruckType.adapter as ArrayAdapter<String>).getPosition(it.truckType)
+//                )
+//                rootView.spinFoodtruckType2.setSelection(
+//                    (rootView.spinFoodtruckType2.adapter as ArrayAdapter<String>).getPosition(it.truckSubType)
+//                )
 
-                when (it.truckFoodType) {
-                    FoodTruck.ENTREE -> {
-                        foodtruckFoodType = FoodTruck.ENTREE
-                        rootView.checkEntreeProfile.isChecked = true
-                        rootView.checkDessertProfile.isChecked = false
-                    }
-                    FoodTruck.DESSERT -> {
-                        foodtruckFoodType = FoodTruck.DESSERT
-                        rootView.checkDessertProfile.isChecked = true
-                        rootView.checkEntreeProfile.isChecked = false
-                    }
-                    else -> {
-                        rootView.checkEntreeProfile.isChecked = false
-                        rootView.checkDessertProfile.isChecked = false
-                    }
-                }
+//                when (it.truckFoodType) {
+//                    Organization.ENTREE -> {
+//                        foodtruckFoodType = Organization.ENTREE
+//                        rootView.checkEntreeProfile.isChecked = true
+//                        rootView.checkDessertProfile.isChecked = false
+//                    }
+//                    Organization.DESSERT -> {
+//                        foodtruckFoodType = Organization.DESSERT
+//                        rootView.checkDessertProfile.isChecked = true
+//                        rootView.checkEntreeProfile.isChecked = false
+//                    }
+//                    else -> {
+//                        rootView.checkEntreeProfile.isChecked = false
+//                        rootView.checkDessertProfile.isChecked = false
+//                    }
+//                }
             }
 
-            rootView.checkEntreeProfile.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    foodtruckFoodType = FoodTruck.ENTREE
-                    rootView.checkDessertProfile.isChecked = false
-                }
-            }
-            rootView.checkDessertProfile.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    foodtruckFoodType = FoodTruck.DESSERT
-                    rootView.checkEntreeProfile.isChecked = false
-                }
-            }
+//            rootView.checkEntreeProfile.setOnCheckedChangeListener { _, isChecked ->
+//                if (isChecked) {
+//                    foodtruckFoodType = Organization.ENTREE
+//                    rootView.checkDessertProfile.isChecked = false
+//                }
+//            }
+//            rootView.checkDessertProfile.setOnCheckedChangeListener { _, isChecked ->
+//                if (isChecked) {
+//                    foodtruckFoodType = Organization.DESSERT
+//                    rootView.checkEntreeProfile.isChecked = false
+//                }
+//            }
 
         }
         //Disable Display
@@ -179,7 +179,7 @@ class ProfileFragment : Fragment() {
                     }
 
                     //-> FOODTRUCK
-                    if (user?.auth == User.FOODTRUCK_MANAGER) {
+                    if (user?.auth == AuthTypes.BASIC_USER) {
                         if (editTruckName.text.isNullOrEmpty()) {
                             rootView.editTruckName.setHintTextColor(Color.RED)
                             return@setOnClickListener
@@ -213,28 +213,28 @@ class ProfileFragment : Fragment() {
                         resetDisplay()
                     }
 
-                    //-> FOODTRUCK USER
-                    if (user?.auth == User.FOODTRUCK_MANAGER) {
-                        val trucks : RealmList<FoodTruck>? = Session.session?.foodtrucks
-                        val newTruckName = rootView.editTruckName.text.toString()
-                        if (!trucks.isNullOrEmpty()) {
-                            val curTruck = trucks[0] as FoodTruck
-                            val tid = curTruck.id
-                            if (foodtruckType != foodtruckType2) {
-                                FoodTruck(tid, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2, foodtruckFoodType)
-                                    .addUpdateForFirebase(requireActivity())
-                                resetDisplay()
-                            } else {
-                                rootView.spinFoodtruckType.background = COLOR_RED
-                                rootView.spinFoodtruckType2.background = COLOR_RED
-                            }
-                        } else {
-                            val id = UUID.randomUUID().toString()
-                            FoodTruck(id, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2, foodtruckFoodType)
-                                .addUpdateForFirebase(requireActivity())
-                            resetDisplay()
-                        }
-                    }
+//                    //-> FOODTRUCK USER
+//                    if (user?.auth == AuthTypes.BASIC_USER) {
+//                        val trucks : RealmList<Organization>? = Session.session?.foodtrucks
+//                        val newTruckName = rootView.editTruckName.text.toString()
+//                        if (!trucks.isNullOrEmpty()) {
+//                            val curTruck = trucks[0] as Organization
+//                            val tid = curTruck.id
+//                            if (foodtruckType != foodtruckType2) {
+//                                Organization(tid, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2, foodtruckFoodType)
+//                                    .addUpdateForFirebase(requireActivity())
+//                                resetDisplay()
+//                            } else {
+//                                rootView.spinFoodtruckType.background = COLOR_RED
+//                                rootView.spinFoodtruckType2.background = COLOR_RED
+//                            }
+//                        } else {
+//                            val id = UUID.randomUUID().toString()
+//                            Organization(id, AuthController.USER_UID, newTruckName, foodtruckType, foodtruckType2, foodtruckFoodType)
+//                                .addUpdateForFirebase(requireActivity())
+//                            resetDisplay()
+//                        }
+//                    }
                 }
             }
         }
@@ -261,7 +261,7 @@ class ProfileFragment : Fragment() {
         rootView.editEmail.background = COLOR_WHITE
         rootView.editPhoneNumber.background = COLOR_WHITE
         //Truck Name
-        if (user?.auth == User.FOODTRUCK_MANAGER) {
+        if (user?.auth == AuthTypes.BASIC_USER) {
             rootView.editTruckName.background = COLOR_WHITE
             //Spinners
             rootView.spinFoodtruckType.background = COLOR_WHITE
@@ -277,7 +277,7 @@ class ProfileFragment : Fragment() {
         rootView.editProfileName.isEnabled = enable
         rootView.editEmail.isEnabled = enable
         rootView.editPhoneNumber.isEnabled = enable
-        if (user?.auth == User.FOODTRUCK_MANAGER) {
+        if (user?.auth == AuthTypes.BASIC_USER) {
             rootView.editTruckName.isEnabled = enable
             rootView.spinFoodtruckType.isEnabled = enable
             rootView.spinFoodtruckType2.isEnabled = enable

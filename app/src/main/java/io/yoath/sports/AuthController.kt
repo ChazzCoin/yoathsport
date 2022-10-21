@@ -1,6 +1,5 @@
 package io.yoath.sports
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -10,7 +9,7 @@ import com.google.firebase.database.*
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.yoath.sports.foodtruckManager.MainFoodTruckManagerActivity
+import io.yoath.sports.basicUser.MainFoodTruckManagerActivity
 import io.yoath.sports.locationManager.MainLocationManagerActivity
 import io.yoath.sports.model.*
 import io.yoath.sports.ui.login.LoginActivity
@@ -23,7 +22,7 @@ import kotlinx.coroutines.SupervisorJob
 
 
 /**
- * Created by ChazzCoin : December 2019.
+ * Created by ChazzCoin : October 2022.
  * release key pw: M4BOfzfVr4ymXwI
  */
 
@@ -36,12 +35,9 @@ class AuthController : AppCompatActivity()  {
 
     private val mInstance: AuthController? = null
     private lateinit var database: DatabaseReference
-
     val main = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
     var mUser : User? = null
     lateinit var uid : String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +46,6 @@ class AuthController : AppCompatActivity()  {
         FirebaseApp.initializeApp(this)
         //Init Calendar
         AndroidThreeTen.init(this)
-
         //Init Realm DB
         Realm.init(this)
         val realmConfiguration = RealmConfiguration.Builder()
@@ -58,8 +53,9 @@ class AuthController : AppCompatActivity()  {
             .deleteRealmIfMigrationNeeded()
             .build()
         Realm.setDefaultConfiguration(realmConfiguration)
-
-        doSetup()
+        //Finally . . .
+        startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
+//        doSetup()
     }
 
     private fun doSetup() {
@@ -113,19 +109,20 @@ class AuthController : AppCompatActivity()  {
     }
 
     private fun navigateUser(user: User){
-        when (user.auth) {
-            User.FOODTRUCK_MANAGER -> {
-                startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
-            }
-            User.LOCATION_MANAGER -> {
-                startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))
-            }
-            else -> {
-                Toast.makeText(this, "Pending User Approval", Toast.LENGTH_LONG).show()
-                //TODO: CREATE TEMP PAGE FOR WAITING USERS
-                startActivity(Intent(this@AuthController, MainPendingActivity::class.java))
-            }
-        }
+        startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
+//        when (user.auth) {
+//            AuthTypes.BASIC_USER -> {
+//                startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
+//            }
+//            AuthTypes.COACH_USER -> {
+//                startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))
+//            }
+//            else -> {
+//                Toast.makeText(this, "Pending User Approval", Toast.LENGTH_LONG).show()
+//                //TODO: CREATE TEMP PAGE FOR WAITING USERS
+//                startActivity(Intent(this@AuthController, MainPendingActivity::class.java))
+//            }
+//        }
     }
 
 }
