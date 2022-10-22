@@ -1,4 +1,4 @@
-package io.yoath.sports.locationManager.manage
+package io.yoath.sports.coachUser.manage
 
 import android.os.Bundle
 import android.view.LayoutInflater

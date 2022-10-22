@@ -10,7 +10,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.yoath.sports.basicUser.MainFoodTruckManagerActivity
-import io.yoath.sports.locationManager.MainLocationManagerActivity
+import io.yoath.sports.coachUser.MainLocationManagerActivity
 import io.yoath.sports.model.*
 import io.yoath.sports.ui.login.LoginActivity
 import io.yoath.sports.utils.FireHelper
@@ -54,8 +54,7 @@ class AuthController : AppCompatActivity()  {
             .build()
         Realm.setDefaultConfiguration(realmConfiguration)
         //Finally . . .
-        startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
-//        doSetup()
+        doSetup()
     }
 
     private fun doSetup() {
@@ -65,7 +64,7 @@ class AuthController : AppCompatActivity()  {
             mUser?.let { itUser ->
                 uid = itUser.uid
                 USER_UID = itUser.uid
-                USER_AUTH = itUser.auth.toString()
+                USER_AUTH = itUser.auth
                 //Init Cart
                 createCart()
                 getProfileUpdatesFirebase()
@@ -109,20 +108,19 @@ class AuthController : AppCompatActivity()  {
     }
 
     private fun navigateUser(user: User){
-        startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
-//        when (user.auth) {
-//            AuthTypes.BASIC_USER -> {
-//                startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
-//            }
-//            AuthTypes.COACH_USER -> {
-//                startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))
-//            }
-//            else -> {
-//                Toast.makeText(this, "Pending User Approval", Toast.LENGTH_LONG).show()
-//                //TODO: CREATE TEMP PAGE FOR WAITING USERS
-//                startActivity(Intent(this@AuthController, MainPendingActivity::class.java))
-//            }
-//        }
+        when (user.auth) {
+            AuthTypes.BASIC_USER -> {
+                startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
+            }
+            AuthTypes.COACH_USER -> {
+                startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))
+            }
+            else -> {
+                Toast.makeText(this, "Pending User Approval", Toast.LENGTH_LONG).show()
+                //TODO: CREATE TEMP PAGE FOR WAITING USERS
+                startActivity(Intent(this@AuthController, MainPendingActivity::class.java))
+            }
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package io.yoath.sports.locationManager
+package io.yoath.sports.coachUser
 
 import android.app.Activity
 import android.content.Context

@@ -32,7 +32,7 @@
             android:name="io.yoath.sports.MainPendingActivity"
             android:label="Main Pending Activity" />
         <activity
-            android:name="io.yoath.sports.locationManager.MainLocationManagerActivity"
+            android:name="io.yoath.sports.coachUser.MainLocationManagerActivity"
             android:label="Main Location Manager Activity" />
         <activity
             android:name="io.yoath.sports.basicUser.MainFoodTruckManagerActivity"
@@ -47,7 +47,7 @@
             android:name="io.yoath.sports.ui.SpotDetailsActivity"
             android:label="Spot Details" />
         <activity
-            android:name="io.yoath.sports.locationManager.CreateSpotActivity"
+            android:name="io.yoath.sports.coachUser.CreateSpotActivity"
             android:label="Create Spot" />
     </application>
 

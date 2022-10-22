@@ -18,7 +18,7 @@ import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
 import io.yoath.sports.basicUser.dashboard.FoodDashboardViewAdapter
-import io.yoath.sports.locationManager.dashboard.LocDashViewAdapter
+import io.yoath.sports.coachUser.dashboard.LocDashViewAdapter
 import io.yoath.sports.utils.*
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*

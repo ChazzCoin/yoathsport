@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase
 import io.realm.RealmList
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
-import io.yoath.sports.locationManager.manage.LocManageFragment
+import io.yoath.sports.coachUser.manage.LocManageFragment
 import io.yoath.sports.utils.FireHelper
 import io.yoath.sports.utils.showFailedToast
 import io.yoath.sports.utils.showSuccess

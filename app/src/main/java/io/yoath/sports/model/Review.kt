@@ -28,6 +28,7 @@ open class Review : RealmObject() {
     @PrimaryKey
     var id: String = ""
     var score: Int = 999 // score 1 or 10
+    var type: String? = ""
     var details: String = "" //
     var questions: RealmList<String>? = null
 }
