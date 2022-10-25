@@ -39,6 +39,7 @@ open class User(uid:String = "", name:String? = "", email:String? = "") : RealmO
     var auth: String = BASIC_USER // "basic"
     var phone: String? = ""
     var organization: String? = ""
+    var visibility: String = "closed"
 
     fun isCoachUser() : Boolean {
         if (this.auth == COACH_USER) return true

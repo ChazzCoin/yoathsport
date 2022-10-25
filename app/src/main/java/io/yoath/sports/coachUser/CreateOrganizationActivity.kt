@@ -25,7 +25,7 @@ import kotlin.collections.HashMap
  * Created by ChazzCoin : December 2020.
  */
 
-class CreateSpotActivity : AppCompatActivity() {
+class CreateOrganizationActivity : AppCompatActivity() {
 
     val EMPTY_SPINNER = "Pick Food Type"
     val NONE = "None"
@@ -64,9 +64,6 @@ class CreateSpotActivity : AppCompatActivity() {
             user = Session.user
             itSession.organizations?.let { itLocations ->
                 organization = itLocations.find { it.id == locationId }
-            }
-            itSession.spots?.let {
-                listOfSpots = it
             }
         }
 
@@ -270,7 +267,7 @@ class CreateSpotActivity : AppCompatActivity() {
                     setupSpinners()
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
-                    showFailedToast(this@CreateSpotActivity)
+                    showFailedToast(this@CreateOrganizationActivity)
                 }
             })
     }

@@ -1,6 +1,5 @@
 package io.yoath.sports.ui.login
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -12,15 +11,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
-import io.yoath.sports.db.FireDB
-import io.yoath.sports.db.firebase
 import io.yoath.sports.model.AuthTypes
 import io.yoath.sports.model.Session
 import io.yoath.sports.model.User
 import io.yoath.sports.utils.FireHelper
 
 /**
- * Created by ChazzCoin : December 2019.
+ * Created by ChazzCoin : October 2022.
  */
 
 class LoginActivity : AppCompatActivity() {
@@ -104,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Error Signing In", Toast.LENGTH_SHORT).show()
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {

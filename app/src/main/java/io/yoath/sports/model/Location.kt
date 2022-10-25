@@ -14,23 +14,18 @@ import io.yoath.sports.model.Spot.Companion.PENDING_CASHAPP
 import io.yoath.sports.utils.*
 import io.realm.RealmObject
 import io.yoath.sports.db.firebase
-import kotlinx.android.synthetic.main.dialog_ask_user_logout.*
 import kotlinx.android.synthetic.main.dialog_spot_details.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Created by ChazzCoin : December 2019.
+ * Created by ChazzCoin : October 2022.
  */
 open class Spot(id:String? = "", addressOne:String? = "", addressTwo:String? = "",
                 city:String? = "", state:String? = "", zip:String? = "",
                  date:String? = "", spotManager:String? = "") : RealmObject() {
 
     companion object {
-        const val BREAKFAST = 111
-        const val LUNCH = 222
-        const val DINNER = 333
-
         const val LUNCH_TIME : String = "11AM-2PM"
         const val DINNER_TIME : String = "5PM-8PM"
 
@@ -287,46 +282,46 @@ fun Spot.createDetailsLocationDialog(activity: Activity) : Dialog {
 //}
 
 //update Spot to PENDING
-fun Spot.updatePendingAvailableToFirebase(mContext:Context, status:String, assignedTruckUid:String, assignedTruckName:String, isCashApp:Boolean=false) {
-    val spot = this
-    val newSpot = Spot(spot.id, spot.addressOne, spot.addressTwo,
-        spot.city, spot.state, spot.zip, spot.date, spot.spotManager)
-    newSpot.apply {
-        //
-        this.status = status
-        this.assignedTruckUid = assignedTruckUid
-        this.assignedTruckName = assignedTruckName
-    }
-    val id = this.id ?: return
-    this.date?.toMonthYearForFirebase()?.let { itDate ->
-        firebase { itBase ->
-            itBase.child(FireHelper.AREAS)
-                .child(FireHelper.ALABAMA)
-                .child(FireHelper.BIRMINGHAM)
-                .child(FireHelper.SPOTS)
-                .child(itDate)
-                .child(id)
-                .setValue(newSpot)
-                .addOnSuccessListener {
-                    //TODO("HANDLE SUCCESS")
-                    when (status) {
-                        PENDING -> {
-                            Session.updateSpotAsPendingForFirebase(id, if (isCashApp) PENDING_CASHAPP else PENDING, assignedTruckUid, assignedTruckName)
-                        }
-                        AVAILABLE -> {
-                            Session.updateSpotAsAvailableForFirebase(id)
-                        }
-                    }
-                    showSuccess(mContext)
-                }.addOnCompleteListener {
-                    //TODO("HANDLE COMPLETE")
-                }.addOnFailureListener {
-                    //TODO("HANDLE FAILURE")
-                    showFailedToast(mContext)
-                }
-        }
-    }
-}
+//fun Spot.updatePendingAvailableToFirebase(mContext:Context, status:String, assignedTruckUid:String, assignedTruckName:String, isCashApp:Boolean=false) {
+//    val spot = this
+//    val newSpot = Spot(spot.id, spot.addressOne, spot.addressTwo,
+//        spot.city, spot.state, spot.zip, spot.date, spot.spotManager)
+//    newSpot.apply {
+//        //
+//        this.status = status
+//        this.assignedTruckUid = assignedTruckUid
+//        this.assignedTruckName = assignedTruckName
+//    }
+//    val id = this.id ?: return
+//    this.date?.toMonthYearForFirebase()?.let { itDate ->
+//        firebase { itBase ->
+//            itBase.child(FireHelper.AREAS)
+//                .child(FireHelper.ALABAMA)
+//                .child(FireHelper.BIRMINGHAM)
+//                .child(FireHelper.SPOTS)
+//                .child(itDate)
+//                .child(id)
+//                .setValue(newSpot)
+//                .addOnSuccessListener {
+//                    //TODO("HANDLE SUCCESS")
+//                    when (status) {
+//                        PENDING -> {
+//                            Session.updateSpotAsPendingForFirebase(id, if (isCashApp) PENDING_CASHAPP else PENDING, assignedTruckUid, assignedTruckName)
+//                        }
+//                        AVAILABLE -> {
+//                            Session.updateSpotAsAvailableForFirebase(id)
+//                        }
+//                    }
+//                    showSuccess(mContext)
+//                }.addOnCompleteListener {
+//                    //TODO("HANDLE COMPLETE")
+//                }.addOnFailureListener {
+//                    //TODO("HANDLE FAILURE")
+//                    showFailedToast(mContext)
+//                }
+//        }
+//    }
+//}
 
 //update Spot to AVAILABLE
 fun Spot.updateAvailableToFirebase(mContext: Context) {
@@ -344,7 +339,7 @@ fun Spot.updateAvailableToFirebase(mContext: Context) {
             .setValue(this)
             .addOnSuccessListener {
                 //TODO("HANDLE SUCCESS")
-                Session.updateSpotAsAvailableForFirebase(id)
+//                Session.updateSpotAsAvailableForFirebase(id)
                 showSuccess(mContext)
             }.addOnCompleteListener {
                 //TODO("HANDLE COMPLETE")
@@ -369,7 +364,7 @@ fun Spot.updateBookedToFirebase(mContext: Context) {
             .setValue(this)
             .addOnSuccessListener {
                 //TODO("HANDLE SUCCESS")
-                Session.updateSpotAsBookedForFirebase(id)
+//                Session.updateSpotAsBookedForFirebase(id)
                 showSuccess(mContext)
             }.addOnCompleteListener {
                 //TODO("HANDLE COMPLETE")

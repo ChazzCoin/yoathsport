@@ -19,10 +19,7 @@ import java.io.Serializable
 /**
  * Created by ChazzCoin : December 2019.
  */
-open class Organization(id:String? = "", locationName:String? = "",
-                        addressOne:String? = "", addressTwo:String? = "",
-                        city:String? = "", state:String? = "", zip:String? = "",
-                        estPeople:String? = "") : RealmObject(), Serializable {
+open class Organization : RealmObject(), Serializable {
 
     @PrimaryKey
     var id: String? = "" //UUID
@@ -32,13 +29,13 @@ open class Organization(id:String? = "", locationName:String? = "",
     var city: String? = "" // Birmingham
     var state: String? = "" // AL
     var zip: String? = "" // 35223
-    var type: String? = ""
-    var subType: String? = ""
+    var sport: String? = "unassigned"
+    var type: String? = "unassigned"
+    var subType: String? = "unassigned"
     var details: String? = ""
-    var managerId: String? = ""
-    var managerName: String? = ""
+    var managerId: String? = "unassigned"
+    var managerName: String? = "unassigned"
     var staff: RealmList<String>? = null
-
     var estPeople: String? = ""
 
 
@@ -86,7 +83,6 @@ fun Organization.addUpdateLocationToFirebase(fragment: LocManageFragment? = null
         .setValue(this)
         .addOnSuccessListener {
             //TODO("HANDLE SUCCESS")
-            Session.addLocation(this)
             fragment?.reloadLocAdapter()
             fragment?.let { showSuccess(it.requireContext(), "Location Added!") }
         }.addOnCompleteListener {
@@ -106,7 +102,6 @@ fun Organization.removeFromFirebase(fragment: LocManageFragment? = null) {
         .removeValue()
         .addOnSuccessListener {
             //TODO("HANDLE SUCCESS")
-            Session.removeLocation(this)
             fragment?.reloadLocAdapter()
             fragment?.let { showSuccess(it.requireContext(), "Location Removed!") }
         }.addOnCompleteListener {

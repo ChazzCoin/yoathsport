@@ -9,6 +9,16 @@ import io.realm.RealmList
  * Created by ChazzCoin : December 2019.
  */
 
+/** -> TRIED AND TRUE! <- */
+fun <T> RealmList<T>?.toMutableList() : MutableList<T> {
+    val listOfT = mutableListOf<T>()
+    this?.let {
+        for (item in it) {
+            listOfT.add(item)
+        }
+    }
+    return listOfT
+}
 
 
 fun realm() : Realm {
@@ -37,15 +47,10 @@ fun sessionAndUser(block: (Session, User) -> Unit) {
     }
 }
 
-inline fun spots(block: (Session, RealmList<Spot>) -> Unit) {
-    Session.session?.spots?.let { block(Session.session!!, it) }
-}
+
 
 inline fun locations(block: (RealmList<Organization>) -> Unit) {
     Session.session?.organizations?.let { block(it) }
 }
 
-inline fun sessionFoodtrucks(block: (RealmList<Organization>) -> Unit) {
-    Session.session?.foodtrucks?.let { block(it) }
-}
 

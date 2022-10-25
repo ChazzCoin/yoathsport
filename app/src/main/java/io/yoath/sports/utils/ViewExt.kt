@@ -9,10 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
@@ -22,7 +19,27 @@ import androidx.core.content.ContextCompat
  * Created by ChazzCoin : December 2019.
  */
 
+/** -> TRIED AND TRUE! <- */
+//fun RecyclerView.init<T>(listOfArticles: MutableList<T>, fragmentActivity: FragmentActivity) {
+//    val adapter = ListAdapter()
+//    this.layoutManager = LinearLayoutManager(MainGlewMeTvActivity.context, LinearLayoutManager.VERTICAL, false)
+//    return this.adapter
+//}
 
+//fun RecyclerView.initEvents(listOfEvents: MutableList<Event>) : EventListAdapter {
+//    val eventAdapter = EventListAdapter(listOfEvents = listOfEvents)
+//    this.layoutManager = LinearLayoutManager(MainGlewMeTvActivity.context, LinearLayoutManager.HORIZONTAL, false)
+//    this.adapter = eventAdapter
+//    return eventAdapter
+//}
+//
+//fun RecyclerView.initTickers(listOfTickers: MutableList<Ticker>) : TickerAdapter {
+//    val adapter = TickerAdapter()
+//    this.layoutManager = LinearLayoutManager(MainGlewMeTvActivity.context, LinearLayoutManager.HORIZONTAL, false)
+//    this.adapter = adapter
+//    adapter.addListOfTickers(listOfTickers)
+//    return adapter
+//}
 
 fun View.makeVisible() {
     visibility = View.VISIBLE

@@ -17,14 +17,18 @@ import com.google.firebase.database.*
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
-import io.yoath.sports.basicUser.dashboard.FoodDashboardViewAdapter
+import io.yoath.sports.basicUser.dashboard.UserDashboardViewAdapter
 import io.yoath.sports.coachUser.dashboard.LocDashViewAdapter
 import io.yoath.sports.utils.*
 import io.realm.RealmList
+import io.yoath.sports.db.addOrganization
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 /**
@@ -37,7 +41,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var database: DatabaseReference
 
     //FoodTruck Manager
-    private var foodAdapter : FoodDashboardViewAdapter? = null
+    private var foodAdapter : UserDashboardViewAdapter? = null
 
     //Location Manager
     private lateinit var eSpinSpotLocation : Spinner
@@ -48,15 +52,12 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var organizationMap : HashMap<Int, Organization> = HashMap()
     private var finalOrganization : Organization? = null
 
-    private var spotList: RealmList<Spot> = RealmList()
-    var arrayOfSpots : ArrayList<Spot> = ArrayList()
 
     val main = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     lateinit var user: User
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
         //RecyclerView Init Setup
@@ -76,101 +77,28 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 createAskUserLogoutDialog(requireActivity()).show()
             }
         }
-
+        createFirstOrg()
         return rootView
+    }
+
+    private fun createFirstOrg() {
+        var org = Organization()
+        org.apply {
+            this.id = getUUID()
+            this.sport = "soccer"
+            this.city = "birmingham"
+            this.name = "USYSR"
+        }
+        addOrganization(org)
     }
 
     private fun setup(user: User) {
         if (AuthController.USER_AUTH == AuthTypes.BASIC_USER) { //FoodTruck Manager
-            setupFoodManager(user)
-        } else if (AuthController.USER_AUTH == AuthTypes.COACH_USER) { //Location Manager
-            setupLocationManager(user)
+            //setup User
+            println("to be setup...")
         }
     }
 
-    /** FOODTRUCK USER SETUP **/
-    private fun setupFoodManager(user: User) {
-        rootView.txtUserWelcome.text = user.name
-        rootView.txtUserEmail.text = user.email
-        rootView.linearLayoutSpinner.visibility = View.GONE
-        foodAdapter = FoodDashboardViewAdapter(requireContext())
-        rootView.recyclerViewDashboard.adapter = foodAdapter
-
-//        user.getFoodtrucksFromFirebase(requireContext(), this)
-    }
-    /** LOCATION USER SETUP **/
-    private fun setupLocationManager(user: User) {
-        rootView.txtUserWelcome?.text = user.name
-        rootView.txtUserEmail?.text = user.email
-        //->Spinner
-        locations {
-            if (!it.isNullOrEmpty()) {
-                organizationList = it
-                prepareListOfLocations()
-                eSpinAdapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_list_item_1,
-                    locationNameList
-                )
-                val id = it[0]?.id
-                getSpotsFromFirebase(getMonthYearForFirebase(), id ?: "")
-                spotAdapter = LocDashViewAdapter(requireContext(), requireActivity(), id ?: "")
-                rootView.recyclerViewDashboard.adapter = spotAdapter
-            }
-        }
-        eSpinSpotLocation = rootView.findViewById(R.id.spinLocations)
-        eSpinSpotLocation.onItemSelectedListener = this
-        eSpinSpotLocation.adapter = eSpinAdapter
-    }
-
-    private fun prepareListOfLocations() {
-        for ((i, location) in organizationList.withIndex()){
-            locationNameList.add(location.name)
-            organizationMap[i] = location
-        }
-    }
-
-    private fun prepareListOfSpots() {
-        spotList.iterator().forEach { arrayOfSpots.add(it) }
-    }
-
-    private fun checkSpotsForReviews() {
-        when (user.auth) {
-            AuthTypes.BASIC_USER -> {
-                rootView.btnReview.makeVisible()
-                rootView.btnReview.setOnClickListener {
-                    createReviewDialog(requireActivity(), spot = null).show()
-                }
-            }
-            AuthTypes.COACH_USER -> {
-                if (arrayOfSpots.isNullOrEmpty()) return
-                for (spot in arrayOfSpots) {
-                    if (spot.hasReview) continue
-                    if (!spot.isOld()) continue
-                    rootView.btnReview.makeVisible()
-                    rootView.btnReview.setOnClickListener {
-                        createReviewDialog(requireActivity(), spot = spot).show()
-                    }
-                }
-            }
-        }
-    }
-
-    fun verifyFoodtruck() {
-        if (!foodtruckIsValid()) {
-            createProfileDialog(requireActivity(), user).show()
-        }
-    }
-
-    private fun foodtruckIsValid() : Boolean {
-        val trucks = Session.session?.foodtrucks
-        if (trucks.isNullOrEmpty()) return false
-//        for (truck in trucks!!) {
-//            if (truck.truckName.isNullOrEmpty()) return false
-//            if (truck.truckType.isNullOrEmpty()) return false
-//        }
-        return true
-    }
 
     /** Location Manager Spinner On Click Listener **/
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -187,33 +115,4 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         TODO("Not yet implemented")
     }
 
-    private fun getSpotsFromFirebase(monthYear: String, locationId: String) {
-        Log.d("SpotCalendarLocation: ", "getSpotsFromFirebase")
-        database = FirebaseDatabase.getInstance().reference
-        database.child(FireHelper.AREAS).child(FireHelper.ALABAMA)
-            .child(FireHelper.BIRMINGHAM).child(FireHelper.SPOTS).child(monthYear)
-            .orderByChild("locationUUID").equalTo(locationId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.children) {
-                        val spot: Spot? = ds.getValue(Spot::class.java)
-                        spot?.let {
-                            if (it.isOld()) return@let
-                            if (spotList.contains(it)) return@let
-                            //locationId == ""
-                            spotList.add(it)
-                        }
-                    }
-                    //init view
-                    prepareListOfSpots()
-                    spotAdapter?.arrayOfSpots = arrayOfSpots
-                    spotAdapter?.notifyDataSetChanged()
-                    checkSpotsForReviews()
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    showFailedToast(requireContext())
-                }
-            })
-    }
 }

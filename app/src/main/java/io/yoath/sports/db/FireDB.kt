@@ -1,7 +1,10 @@
 package io.yoath.sports.db
 
+import android.content.Context
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.yoath.sports.model.Organization
+import io.yoath.sports.model.Session
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -31,6 +34,13 @@ class FireDB {
         const val USERS: String = "users"
         const val LOCATIONS: String = "locations"
         const val FOODTRUCKS: String = "foodtrucks"
+
+        /**
+         * sports - organizations(sport) - organization(id) - coaches - coach(id)
+         * profiles - users - user(type)
+         * Reviews - review(id)
+         *
+         */
         //City
         const val AREAS: String = "areas"
         const val ALABAMA: String = "alabama"
@@ -51,4 +61,22 @@ class FireDB {
 
 inline fun firebase(block: (DatabaseReference) -> Unit) {
     block(FirebaseDatabase.getInstance().reference)
+}
+
+fun addOrganization(org:Organization) {
+    firebase { database ->
+        database.child("organizations")
+            .setValue(org)
+            .addOnSuccessListener {
+                //TODO("HANDLE SUCCESS")
+                Session.addOrganization(org)
+//                fragment?.let { showSuccess(it.requireContext(), "Organiztion Added!") }
+            }.addOnCompleteListener {
+                //TODO("HANDLE COMPLETE")
+            }.addOnFailureListener {
+                //TODO("HANDLE FAILURE")
+//                fragment?.let { showFailedToast(it.requireContext()) }
+            }
+    }
+
 }

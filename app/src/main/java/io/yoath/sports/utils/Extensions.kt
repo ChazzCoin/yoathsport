@@ -2,6 +2,7 @@ package io.yoath.sports.utils
 
 import io.realm.RealmList
 import kotlinx.coroutines.*
+import java.util.*
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -33,4 +34,7 @@ fun Any?.isNullOrEmpty() : Boolean {
     return false
 }
 
+fun getUUID(): String {
+    return UUID.randomUUID().toString()
+}
 

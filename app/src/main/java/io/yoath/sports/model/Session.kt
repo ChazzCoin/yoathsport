@@ -7,14 +7,13 @@ import androidx.core.app.ActivityCompat
 import io.yoath.sports.AuthController
 import io.yoath.sports.utils.executeRealm
 import io.yoath.sports.utils.session
-import io.yoath.sports.utils.spots
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 /**
- * Created by ChazzCoin : December 2019.
+ * Created by ChazzCoin : October 2022.
  */
 open class Session : RealmObject() {
     //DO NOT MAKE STATIC!
@@ -22,18 +21,11 @@ open class Session : RealmObject() {
     var sessionId = 0
 
     //DO NOT MAKE STATIC
-    var organizations: RealmList<Organization>? = null
-    var spots: RealmList<Spot>? = null
-    var foodtrucks: RealmList<Organization>? = null
+    var organizations: RealmList<Organization>? = RealmList()
 
     /** -> EVERYTHING IS STATIC BELOW THIS POINT <- **/
     companion object {
-        //Global App Setup
-        var isLocationManager = false
-        var isFoodTruckManager = false
-
         //SpotController
-        var listOfSpots : RealmList<Spot> = RealmList()
 
         //UserController
         private const val WAITING = "waiting"
@@ -104,43 +96,43 @@ open class Session : RealmObject() {
             }
         }
 
-        fun updateSpotAsPendingForFirebase(id:String, status: String,
-                                           assignedTruckUid: String, assignedTruckName: String){
-            spots { session, spots ->
-                for (s in spots) {
-                    if (s.id == id) {
-                        executeRealm {
-                            s.assignedTruckName = assignedTruckName
-                            s.assignedTruckUid = assignedTruckUid
-                            s.status = status
-                            it.insertOrUpdate(session)
-                        }
-                    }
-                }
-            }
-        }
+//        fun updateSpotAsPendingForFirebase(id:String, status: String,
+//                                           assignedTruckUid: String, assignedTruckName: String){
+//            spots { session, spots ->
+//                for (s in spots) {
+//                    if (s.id == id) {
+//                        executeRealm {
+//                            s.assignedTruckName = assignedTruckName
+//                            s.assignedTruckUid = assignedTruckUid
+//                            s.status = status
+//                            it.insertOrUpdate(session)
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
-        fun updateSpotAsBookedForFirebase(id:String) {
-            spots { session, spots ->
-                executeRealm { itRealm ->
-                    val s = spots.find { it.id == id }
-                    s?.status = Spot.BOOKED
-                    itRealm.insertOrUpdate(session)
-                }
-            }
-        }
+//        fun updateSpotAsBookedForFirebase(id:String) {
+//            spots { session, spots ->
+//                executeRealm { itRealm ->
+//                    val s = spots.find { it.id == id }
+//                    s?.status = Spot.BOOKED
+//                    itRealm.insertOrUpdate(session)
+//                }
+//            }
+//        }
 
-        fun updateSpotAsAvailableForFirebase(id:String) {
-            spots { session, spots ->
-                executeRealm {
-                    val s = spots.find { it.id == id }
-                    s?.assignedTruckName = ""
-                    s?.assignedTruckUid = ""
-                    s?.status = Spot.AVAILABLE
-                    it.insertOrUpdate(session)
-                }
-            }
-        }
+//        fun updateSpotAsAvailableForFirebase(id:String) {
+//            spots { session, spots ->
+//                executeRealm {
+//                    val s = spots.find { it.id == id }
+//                    s?.assignedTruckName = ""
+//                    s?.assignedTruckUid = ""
+//                    s?.status = Spot.AVAILABLE
+//                    it.insertOrUpdate(session)
+//                }
+//            }
+//        }
 
         //CHECK IS USER IS LOGGED IN
         val isLogged: Boolean
@@ -179,7 +171,7 @@ open class Session : RealmObject() {
         /** -> LOCATIONS <- **/
 
         //ADD LOCATION, this should be safe
-        fun addLocation(organization: Organization?) {
+        fun addOrganization(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
@@ -191,7 +183,7 @@ open class Session : RealmObject() {
         }
 
         //REMOVE LOCATION
-        fun removeLocation(organization: Organization?) {
+        fun removeOrganization(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
@@ -215,30 +207,6 @@ open class Session : RealmObject() {
             }
         }
 
-        /** -> FOODTRUCKS <- **/
-        //ADD Foodtruck, this should be safe
-        fun addFoodtruck(foodtruck: Organization?) {
-            if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
-            val session = session
-            session?.let { itSession ->
-                mRealm.beginTransaction()
-                itSession.foodtrucks?.add(foodtruck)
-                mRealm.copyToRealmOrUpdate(session) //safe?
-                mRealm.commitTransaction()
-            }
-        }
-
-        fun removeAllTrucks() {
-            if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
-            val session = session
-            session?.let { itSession ->
-                mRealm.beginTransaction()
-                itSession.foodtrucks?.clear()
-                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
-                mRealm.copyToRealmOrUpdate(session) //safe?
-                mRealm.commitTransaction()
-            }
-        }
 
         /** -> SPOTS <- **/
 
@@ -250,33 +218,22 @@ open class Session : RealmObject() {
             }
         }
 
-        //REMOVE SPOT
-        fun removeSpot(spot: Spot?) {
-            if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
-            val session = session
-            session?.let { itSession ->
-                mRealm.beginTransaction()
-                itSession.spots?.remove(spot)
-                mRealm.copyToRealmOrUpdate(session) //safe?
-                mRealm.commitTransaction()
-            }
-        }
 
-        //SET SPOT LIST
-        fun setListOfSpots() {
-            try {
-                if (mRealm == null) {
-                    mRealm = Realm.getDefaultInstance()
-                }
-                mRealm?.let {
-                    val spotsResults = it.where(Spot::class.java).equalTo("spotManager", AuthController.USER_UID).findAll()
-                    listOfSpots.addAll(spotsResults.subList(0, spotsResults.size))
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+//        //SET SPOT LIST
+//        fun setListOfSpots() {
+//            try {
+//                if (mRealm == null) {
+//                    mRealm = Realm.getDefaultInstance()
+//                }
+//                mRealm?.let {
+//                    val spotsResults = it.where(Spot::class.java).equalTo("spotManager", AuthController.USER_UID).findAll()
+//                    listOfSpots.addAll(spotsResults.subList(0, spotsResults.size))
+//                }
+//
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
 
     }
 }

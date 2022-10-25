@@ -75,56 +75,10 @@ class ProfileFragment : Fragment() {
         rootView.editProfileName.setText(user?.name)
         rootView.editEmail.setText(user?.email)
         rootView.editPhoneNumber.setText(user?.phone)
-
-        // Foodtruck User
-        if (user?.auth == AuthTypes.BASIC_USER) {
-            val trucks : RealmList<Organization>? = Session.session?.foodtrucks
-            val truck = trucks?.first()
-            truck?.let {
-//                rootView.editTruckName.setText(it.truckName)
-//                rootView.spinFoodtruckType.setSelection(
-//                    (rootView.spinFoodtruckType.adapter as ArrayAdapter<String>).getPosition(it.truckType)
-//                )
-//                rootView.spinFoodtruckType2.setSelection(
-//                    (rootView.spinFoodtruckType2.adapter as ArrayAdapter<String>).getPosition(it.truckSubType)
-//                )
-
-//                when (it.truckFoodType) {
-//                    Organization.ENTREE -> {
-//                        foodtruckFoodType = Organization.ENTREE
-//                        rootView.checkEntreeProfile.isChecked = true
-//                        rootView.checkDessertProfile.isChecked = false
-//                    }
-//                    Organization.DESSERT -> {
-//                        foodtruckFoodType = Organization.DESSERT
-//                        rootView.checkDessertProfile.isChecked = true
-//                        rootView.checkEntreeProfile.isChecked = false
-//                    }
-//                    else -> {
-//                        rootView.checkEntreeProfile.isChecked = false
-//                        rootView.checkDessertProfile.isChecked = false
-//                    }
-//                }
-            }
-
-//            rootView.checkEntreeProfile.setOnCheckedChangeListener { _, isChecked ->
-//                if (isChecked) {
-//                    foodtruckFoodType = Organization.ENTREE
-//                    rootView.checkDessertProfile.isChecked = false
-//                }
-//            }
-//            rootView.checkDessertProfile.setOnCheckedChangeListener { _, isChecked ->
-//                if (isChecked) {
-//                    foodtruckFoodType = Organization.DESSERT
-//                    rootView.checkEntreeProfile.isChecked = false
-//                }
-//            }
-
-        }
-        //Disable Display
-        toggleDisplay(false)
-        rootView.btnCancelProfile.isEnabled = false
     }
+
+
+
 
     private fun setupSpinners() {
         //Foodtruck Type

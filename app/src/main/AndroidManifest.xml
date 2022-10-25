@@ -35,7 +35,7 @@
             android:name="io.yoath.sports.coachUser.MainLocationManagerActivity"
             android:label="Main Location Manager Activity" />
         <activity
-            android:name="io.yoath.sports.basicUser.MainFoodTruckManagerActivity"
+            android:name="io.yoath.sports.basicUser.MainBasicUserActivity"
             android:label="Main Food Truck Activity" />
         <activity
             android:name="io.yoath.sports.basicUser.calendar.FoodCalendarFragment"
@@ -47,7 +47,7 @@
             android:name="io.yoath.sports.ui.SpotDetailsActivity"
             android:label="Spot Details" />
         <activity
-            android:name="io.yoath.sports.coachUser.CreateSpotActivity"
+            android:name="io.yoath.sports.coachUser.CreateOrganizationActivity"
             android:label="Create Spot" />
     </application>
 

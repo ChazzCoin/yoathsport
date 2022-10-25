@@ -9,7 +9,7 @@ import com.google.firebase.database.*
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.yoath.sports.basicUser.MainFoodTruckManagerActivity
+import io.yoath.sports.basicUser.MainBasicUserActivity
 import io.yoath.sports.coachUser.MainLocationManagerActivity
 import io.yoath.sports.model.*
 import io.yoath.sports.ui.login.LoginActivity
@@ -110,7 +110,7 @@ class AuthController : AppCompatActivity()  {
     private fun navigateUser(user: User){
         when (user.auth) {
             AuthTypes.BASIC_USER -> {
-                startActivity(Intent(this@AuthController, MainFoodTruckManagerActivity::class.java))
+                startActivity(Intent(this@AuthController, MainBasicUserActivity::class.java))
             }
             AuthTypes.COACH_USER -> {
                 startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))

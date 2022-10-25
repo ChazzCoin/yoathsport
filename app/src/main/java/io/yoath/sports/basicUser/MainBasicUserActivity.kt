@@ -14,7 +14,7 @@ import io.yoath.sports.model.User
  * Created by ChazzCoin : December 2019.
  */
 
-class MainFoodTruckManagerActivity : AppCompatActivity() {
+class MainBasicUserActivity : AppCompatActivity() {
 
     private val user : User? = null
 

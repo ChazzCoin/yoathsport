@@ -38,7 +38,6 @@ class LocManageFragment : Fragment() {
         reloadLocAdapter()
 
         rootView.btnAddUpdateLocation.setOnClickListener{
-            getLocationInfoFromUser()
             reloadLocAdapter()
         }
         rootView.btnCancelLocationEdit.setOnClickListener {
@@ -54,19 +53,6 @@ class LocManageFragment : Fragment() {
         this.rootView.recyclerViewLocationsList.adapter = locManageViewAdapter
     }
 
-    private fun getLocationInfoFromUser() {
-        //Grab Fields from User
-        val locationObj = verifyAndSetLocationInfo()
-        //Create Location Object
-        locationObj?.let {
-            val newLocation = Organization(it.id, it.name,
-                it.addressOne, it.addressTwo, it.city, it.state, it.zip, it.estPeople)
-            newLocation.addUpdateLocationToFirebase(this)
-            clearAllFields()
-        } ?: kotlin.run {
-            createFieldErrorDialog(requireActivity()).show()
-        }
-    }
 
     private fun verifyAndSetLocationInfo() : Organization? {
         var uid = ""

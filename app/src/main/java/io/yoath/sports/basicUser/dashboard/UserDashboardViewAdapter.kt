@@ -13,58 +13,44 @@ import io.realm.RealmList
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_list_locations.view.*
 
-class FoodDashboardViewAdapter(mContext: Context) : RecyclerView.Adapter<FoodDashboardViewAdapter.InnerSpotViewHolder>() {
+class UserDashboardViewAdapter(mContext: Context) : RecyclerView.Adapter<UserDashboardViewAdapter.InnerSpotViewHolder>() {
 
-    var spotsList : RealmList<Spot>? = Session.session?.spots
-    var arrayOfSpots : ArrayList<Spot> = ArrayList()
-    var context = mContext
+//    var spotsList : RealmList<Spot>? = Session.session?.spots
+//    var arrayOfSpots : ArrayList<Spot> = ArrayList()
+//    var context = mContext
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerSpotViewHolder {
-        reloadSpots()
         return InnerSpotViewHolder(parent.inflate(R.layout.item_list_food_spots))
     }
 
     override fun onBindViewHolder(viewHolder: InnerSpotViewHolder, position: Int) {
-
-        arrayOfSpots.let {
-            it[position].let { it1 ->
-                viewHolder.bind(it1)
-            }
-        }
-
-        viewHolder.itemView.setOnLongClickListener{
-            arrayOfSpots[position].let { it1 ->
-                AlertDialog.Builder(context)
-                    .setMessage(R.string.location_dialog_delete_confirmation)
-                    .setPositiveButton(R.string.delete) { _, _ ->
-                        //TODO: DELETE SPOT
-                        Session.removeSpot(it1)
-                        this.reloadSpots()
-                        this.notifyDataSetChanged()
-                    }
-                    .setNegativeButton(R.string.close, null)
-                    .show()
-            }
-            return@setOnLongClickListener true
-        }
+//        arrayOfSpots.let {
+//            it[position].let { it1 ->
+//                viewHolder.bind(it1)
+//            }
+//        }
+//
+//        viewHolder.itemView.setOnLongClickListener{
+//            arrayOfSpots[position].let { it1 ->
+//                AlertDialog.Builder(context)
+//                    .setMessage(R.string.location_dialog_delete_confirmation)
+//                    .setPositiveButton(R.string.delete) { _, _ ->
+//                        //TODO: DELETE SPOT
+//                        Session.removeSpot(it1)
+//                        this.reloadSpots()
+//                        this.notifyDataSetChanged()
+//                    }
+//                    .setNegativeButton(R.string.close, null)
+//                    .show()
+//            }
+//            return@setOnLongClickListener true
+//        }
     }
 
     override fun getItemCount(): Int {
-//        if (arrayOfSpots.isEmpty()){
-//            reloadSpots()
-//        }
-        arrayOfSpots.let {
-            return it.size
-        }
+        return 0
     }
 
-    private fun reloadSpots(){
-        this.spotsList = Session.session?.spots
-        arrayOfSpots.clear()
-        spotsList?.iterator()?.forEach { itLocation ->
-            arrayOfSpots.add(itLocation)
-        }
-    }
 
 
     inner class InnerSpotViewHolder(override val containerView: View) :

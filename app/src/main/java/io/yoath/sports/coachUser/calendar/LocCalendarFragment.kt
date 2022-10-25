@@ -98,7 +98,6 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mRootView = inflater.inflate(R.layout.spot_calendar_fragment, container, false)
         //Get Locations
-        getLocationsFromFirebase()
         return mRootView
     }
 
@@ -128,7 +127,7 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
 
         spotAddButton.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ft_add_icon_60dp))
         spotAddButton.setOnClickListener {
-            val i = Intent(context, CreateSpotActivity::class.java)
+            val i = Intent(context, CreateOrganizationActivity::class.java)
             i.putExtra("locationId", finalLocationId)
             i.putExtra("dates", selectedDatesList)
             startActivity(i)
@@ -268,12 +267,6 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
         mSpinAdapter.notifyDataSetChanged()
     }
 
-    private fun getFreshSpots() {
-        Session.setListOfSpots()
-        spotsAdapterLocation?.spots?.clear()
-        spotsAdapterLocation?.spots?.addAll(Session.listOfSpots)
-        spotsAdapterLocation?.notifyDataSetChanged()
-    }
 
     private fun prepareListOfLocations() {
         locationNameList.clear()
@@ -373,8 +366,6 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
             .child(FireHelper.SPOTS).child(spot.id.toString()).removeValue()
             .addOnSuccessListener {
                 //TODO("HANDLE SUCCESS")
-                Session.removeSpot(spot)
-                getFreshSpots()
                 this.selectedDate?.let {
 //                    updateAdapter(it)
                 }
@@ -414,24 +405,6 @@ class SpotCalendarFragmentLocation : Fragment(), AdapterView.OnItemSelectedListe
         })
     }
 
-    private fun getLocationsFromFirebase() {
-        Session.removeAllLocations()
-        database = FirebaseDatabase.getInstance().reference
-        database.child(FireHelper.PROFILES).child(FireHelper.LOCATIONS).child(AuthController.USER_UID)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    for (ds in dataSnapshot.children) {
-                        val locations: Organization? = ds.getValue(Organization::class.java)
-                        locations?.let { Session.addLocation(it) }
-                    }
-                    setupSpinners()
-                }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    //TODO: ADD CRASHALYTICS HERE
-                    showFailedToast(mContext)
-                }
-            })
-    }
 
     override fun onStart() {
         super.onStart()
