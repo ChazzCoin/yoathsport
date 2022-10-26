@@ -10,7 +10,7 @@ apply plugin: 'realm-android'
 android {
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "io.yoath.sports"
+        applicationId "io.usys.report"
         minSdkVersion 26
         targetSdkVersion 32
         compileSdkVersion 29

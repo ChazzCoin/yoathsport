@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.yoath.sports">
+    package="io.usys.report">
 
     <application
         android:allowBackup="true"
@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         android:name="android.support.multidex.MultiDexApplication">
-        <activity android:name="io.yoath.sports.admin.AdminActivity"></activity>
-        <activity android:name="io.yoath.sports.ui.ProfileFragment" />
+        <activity android:name="io.usys.report.admin.AdminActivity"></activity>
+        <activity android:name="io.usys.report.ui.ProfileFragment" />
         <activity
-            android:name="io.yoath.sports.AuthController"
+            android:name="io.usys.report.AuthController"
             android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
@@ -23,31 +23,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="io.yoath.sports.ui.login.LoginActivity"
+            android:name="io.usys.report.ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="io.yoath.sports.MainAdminActivity"
+            android:name="io.usys.report.MainAdminActivity"
             android:label="Main Admin Activity" />
         <activity
-            android:name="io.yoath.sports.MainPendingActivity"
+            android:name="io.usys.report.MainPendingActivity"
             android:label="Main Pending Activity" />
         <activity
-            android:name="io.yoath.sports.coachUser.MainLocationManagerActivity"
+            android:name="io.usys.report.coachUser.MainLocationManagerActivity"
             android:label="Main Location Manager Activity" />
         <activity
-            android:name="io.yoath.sports.basicUser.MainBasicUserActivity"
+            android:name="io.usys.report.basicUser.MainBasicUserActivity"
             android:label="Main Food Truck Activity" />
         <activity
-            android:name="io.yoath.sports.basicUser.calendar.FoodCalendarFragment"
+            android:name="io.usys.report.basicUser.calendar.FoodCalendarFragment"
             android:label="@string/title_activity_calendar_view" />
         <activity
-            android:name="io.yoath.sports.basicUser.checkout.CheckoutActivity"
+            android:name="io.usys.report.basicUser.checkout.CheckoutActivity"
             android:label="@string/pay" />
         <activity
-            android:name="io.yoath.sports.ui.SpotDetailsActivity"
+            android:name="io.usys.report.ui.SpotDetailsActivity"
             android:label="Spot Details" />
         <activity
-            android:name="io.yoath.sports.coachUser.CreateOrganizationActivity"
+            android:name="io.usys.report.coachUser.CreateOrganizationActivity"
             android:label="Create Spot" />
     </application>
 

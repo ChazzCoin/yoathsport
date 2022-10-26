@@ -12,22 +12,22 @@
 
     <fragment
         android:id="@+id/navigation_spot_calendar"
-        android:name="io.yoath.sports.coachUser.SpotCalendarFragmentLocation"
+        android:name="io.usys.report.coachUser.SpotCalendarFragmentLocation"
         android:label="@string/title_calendar"
         tools:layout="@layout/spot_calendar_fragment" />
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="io.yoath.sports.ui.DashboardFragment"
+        android:name="io.usys.report.ui.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/navigation_locations"
-        android:name="io.yoath.sports.coachUser.manage.LocManageFragment"
+        android:name="io.usys.report.coachUser.manage.LocManageFragment"
         android:label="@string/title_locations"
         tools:layout="@layout/fragment_locations" />
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="io.yoath.sports.ui.ProfileFragment"
+        android:name="io.usys.report.ui.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_user_profile" />
 

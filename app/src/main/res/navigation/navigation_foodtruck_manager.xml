@@ -12,23 +12,23 @@
 
     <fragment
         android:id="@+id/navigation_spot_calendar"
-        android:name="io.yoath.sports.basicUser.calendar.FoodCalendarFragment"
+        android:name="io.usys.report.basicUser.calendar.FoodCalendarFragment"
         android:label="@string/title_calendar"
         tools:layout="@layout/spot_calendar_fragment" />
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="io.yoath.sports.ui.DashboardFragment"
+        android:name="io.usys.report.ui.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/navigation_cart"
-        android:name="io.yoath.sports.basicUser.checkout.FoodCartFragment"
+        android:name="io.usys.report.basicUser.checkout.FoodCartFragment"
         android:label="@string/title_cart"
         tools:layout="@layout/fragment_cart" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="io.yoath.sports.ui.ProfileFragment"
+        android:name="io.usys.report.ui.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_user_profile" />
 
