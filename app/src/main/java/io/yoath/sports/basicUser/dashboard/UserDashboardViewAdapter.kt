@@ -3,15 +3,11 @@ package io.yoath.sports.basicUser.dashboard
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import io.yoath.sports.R
-import io.yoath.sports.model.Session
 import io.yoath.sports.model.Spot
 import io.yoath.sports.utils.inflate
-import io.realm.RealmList
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_list_locations.view.*
 
 class UserDashboardViewAdapter(mContext: Context) : RecyclerView.Adapter<UserDashboardViewAdapter.InnerSpotViewHolder>() {
 
@@ -66,11 +62,11 @@ class UserDashboardViewAdapter(mContext: Context) : RecyclerView.Adapter<UserDas
 
         fun bind(spot: Spot) {
             //TODO: SETUP DESIGN HERE
-            containerView.itemLocationName.text = spot.locationName
-            containerView.txtAddressOne.text = spot.addressOne
-            containerView.txtAddressTwo.text = spot.addressTwo
-            containerView.txtCityStateZip.text = "${spot.city}, ${spot.state}, ${spot.zip}"
-            containerView.txtPeople.text = spot.estPeople
+//            containerView.itemLocationName.text = spot.locationName
+//            containerView.txtAddressOne.text = spot.addressOne
+//            containerView.txtAddressTwo.text = spot.addressTwo
+//            containerView.txtCityStateZip.text = "${spot.city}, ${spot.state}, ${spot.zip}"
+//            containerView.txtPeople.text = spot.estPeople
         }
     }
 }

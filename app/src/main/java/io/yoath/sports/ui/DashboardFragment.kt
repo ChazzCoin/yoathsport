@@ -13,21 +13,21 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
-import io.yoath.sports.basicUser.dashboard.UserDashboardViewAdapter
 import io.yoath.sports.coachUser.dashboard.LocDashViewAdapter
 import io.yoath.sports.utils.*
 import io.realm.RealmList
-import io.yoath.sports.db.addOrganization
+import io.yoath.sports.db.*
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -38,20 +38,13 @@ import kotlin.collections.HashMap
 class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     lateinit var rootView : View
-    private lateinit var database: DatabaseReference
-
-    //FoodTruck Manager
-    private var foodAdapter : UserDashboardViewAdapter? = null
-
     //Location Manager
     private lateinit var eSpinSpotLocation : Spinner
     private lateinit var eSpinAdapter : ArrayAdapter<String?>
     private var spotAdapter : LocDashViewAdapter? = null
     private var organizationList : RealmList<Organization> = RealmList() // -> ORIGINAL LIST
-    private var locationNameList : ArrayList<String?> = ArrayList() // -> USED FOR INPUT DIALOG
     private var organizationMap : HashMap<Int, Organization> = HashMap()
     private var finalOrganization : Organization? = null
-
 
     val main = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -72,24 +65,65 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         //-> Global On Click Listeners
         rootView.btnLogout.setOnClickListener {
             //FOR TESTING/ADMIN WORK ONLY
-//            startActivity(Intent(requireContext(), AdminActivity::class.java))
             if (Session.isLogged){
                 createAskUserLogoutDialog(requireActivity()).show()
             }
         }
-        createFirstOrg()
+
+        getOrganizations()
         return rootView
+    }
+
+    //not working
+    private suspend fun getOrganizations2() {
+        val test = getAllDB(FireDB.ORGANIZATIONS)
+        log(test.toString())
+    }
+
+    private fun getOrganizations() {
+        firebase { it ->
+            it.child(FireDB.ORGANIZATIONS)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
+                        result?.getSafe("name")
+                        val resultList = result?.toOrgRealmList()
+                        resultList?.let { itRL ->
+                            recyclerViewDashboard.initRealmList(itRL, requireContext())
+                        }
+                        log(resultList.toString())
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        log("Failed")
+                    }
+                })
+        }
+    }
+
+    private fun createReview() {
+        var rev = Review()
+        rev.apply {
+            this.id = newUUID()
+            this.score = 4
+            this.details = "us soccer"
+            this.questions = RealmList(
+                "Are you satisfied?",
+                "Does this coach work well with kids?",
+                "Does this coach work well with parents?",
+                "Is this coach Chace Zanaty?")
+        }
+        addUpdateDB(FireDB.REVIEWS, rev.id, rev)
     }
 
     private fun createFirstOrg() {
         var org = Organization()
         org.apply {
-            this.id = getUUID()
+            this.id = newUUID()
             this.sport = "soccer"
             this.city = "birmingham"
-            this.name = "USYSR"
+            this.name = "JohnnysBananas"
         }
-        addOrganization(org)
+        addUpdateDB(FireDB.ORGANIZATIONS, org.id.toString(), org)
     }
 
     private fun setup(user: User) {

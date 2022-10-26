@@ -2,11 +2,20 @@ package io.yoath.sports.utils
 
 import io.realm.RealmList
 import kotlinx.coroutines.*
+import java.lang.Exception
 import java.util.*
 
 /**
  * Created by ChazzCoin : December 2019.
  */
+
+inline fun tryCatch(block:() -> Unit) {
+    try {
+        block()
+    } catch (e: Exception) {
+        log("Safe Extension Caught Exception: $e")
+    }
+}
 
 inline fun main(crossinline block: suspend CoroutineScope.() -> Unit) {
     CoroutineScope(Dispatchers.Main + SupervisorJob()).launch {
@@ -34,7 +43,10 @@ fun Any?.isNullOrEmpty() : Boolean {
     return false
 }
 
-fun getUUID(): String {
+fun newUUID(): String {
     return UUID.randomUUID().toString()
 }
 
+fun log(msg: String) {
+    println(msg)
+}

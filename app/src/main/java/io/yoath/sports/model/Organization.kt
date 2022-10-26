@@ -1,7 +1,14 @@
 package io.yoath.sports.model
 
 import android.app.Dialog
+import android.content.Context
 import android.util.Log
+import android.view.View
+import android.widget.*
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -9,11 +16,11 @@ import io.realm.RealmList
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.coachUser.manage.LocManageFragment
-import io.yoath.sports.utils.FireHelper
-import io.yoath.sports.utils.showFailedToast
-import io.yoath.sports.utils.showSuccess
 import io.realm.RealmObject
+import io.yoath.sports.ui.BaseListAdapter
+import io.yoath.sports.utils.*
 import kotlinx.android.synthetic.main.dialog_ask_user_logout.*
+import org.json.JSONObject
 import java.io.Serializable
 
 /**
@@ -53,6 +60,68 @@ open class Organization : RealmObject(), Serializable {
 
 }
 
+fun View.getTextView(res: Int) : TextView {
+    return this.findViewById(res)
+}
+
+fun View.getRecyclerView(res: Int) : RecyclerView {
+    return this.findViewById(res)
+}
+
+fun View.getImageButton(res: Int) : ImageButton {
+    return this.findViewById(res)
+}
+
+fun View.getButton(res: Int) : Button {
+    return this.findViewById(res)
+}
+
+fun View.getLinearLayout(res: Int) : LinearLayout {
+    return this.findViewById(res)
+}
+
+//class OrgViewHolder(itemView: View) : BaseViewHolder(itemView) {
+//    /**
+//     * itemLocationName
+//     * detailsLinearLayout
+//     * addressLinearLayout
+//     * txtAddressOne
+//     * txtAddressTwo
+//     * txtCityStateZip
+//     * txtPeople
+//     * btnAddEditLocationManage
+//     * btnMinusLocationManage
+//     */
+//
+//    var txtOrgName = itemView.findViewById<TextView>(R.id.itemLocationName)
+//    var txtAddressOne = itemView.getTextView(R.id.txtAddressOne)
+//
+//    fun bind(org: Organization) {
+//        txtOrgName.text = org.name
+//        txtAddressOne.text = org.id
+//    }
+//}
+
+fun RecyclerView.initRealmList(realmList: RealmList<Any>, context: Context) : BaseListAdapter {
+    val adapter = BaseListAdapter(realmList)
+    this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    this.adapter = adapter
+    return adapter
+}
+
+fun HashMap<*,*>.toOrgRealmList(): RealmList<Any> {
+    var resultList: RealmList<Any> = RealmList()
+    for ((_,v) in this) {
+        val test = (v as? HashMap<*,*>)?.toJSON()
+        resultList.add(test)
+    }
+    return resultList
+}
+
+private fun <E> RealmList<E>.add(element: JSONObject?) {
+    this.add(element as? E)
+}
+
 fun Organization.createDeleteLocationDialog(fragment: LocManageFragment) : Dialog {
     val dialog = Dialog(fragment.requireActivity())
     dialog.setContentView(R.layout.dialog_ask_user_logout)
@@ -79,7 +148,7 @@ fun Organization.addUpdateLocationToFirebase(fragment: LocManageFragment? = null
     val database: DatabaseReference?
     database = FirebaseDatabase.getInstance().reference
     database.child(FireHelper.PROFILES).child(FireHelper.LOCATIONS)
-        .child(AuthController.USER_UID).child(this.id.toString())
+        .child(AuthController.USER_ID).child(this.id.toString())
         .setValue(this)
         .addOnSuccessListener {
             //TODO("HANDLE SUCCESS")
@@ -98,7 +167,7 @@ fun Organization.removeFromFirebase(fragment: LocManageFragment? = null) {
     val database: DatabaseReference?
     database = FirebaseDatabase.getInstance().reference
     database.child(FireHelper.PROFILES).child(FireHelper.LOCATIONS)
-        .child(AuthController.USER_UID).child(this.id.toString())
+        .child(AuthController.USER_ID).child(this.id.toString())
         .removeValue()
         .addOnSuccessListener {
             //TODO("HANDLE SUCCESS")

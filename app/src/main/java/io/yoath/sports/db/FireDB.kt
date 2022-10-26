@@ -1,10 +1,11 @@
 package io.yoath.sports.db
 
-import android.content.Context
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import io.yoath.sports.model.Organization
-import io.yoath.sports.model.Session
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import io.yoath.sports.utils.firebase
+import io.yoath.sports.utils.ioLaunch
+import io.yoath.sports.utils.log
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -16,67 +17,90 @@ class FireDB {
         const val SPOT_MONTH_DB = "MMMyyyy"
         const val SPOT_DATE_FORMAT = "yyyy-MM-d"
         const val DATE_MONTH = "MMMM"
-
-        const val AVAILABLE: String = "available"
-        const val PENDING: String = "pending"
-        const val BOOKED: String = "booked"
-        const val WAITING: String = "waiting"
-
-        const val paymentIntentUrl = "https://us-central1-food-truck-finder-91dc0.cloudfunctions.net/charge/"
         const val FIRE_DATE_FORMAT = "EEE, MMM d yyyy, hh:mm:ss a"
         //ADMIN
         const val ADMIN: String = "admin"
-        const val SYSTEM: String = "System"
-        const val TRUCKLIST: String = "TruckList"  //"TruckList"
-        const val FOODTRUCK_MANAGER: String = "foodtruck_manager"
-        const val LOCATION_MANAGER: String = "location_manager"
-        const val PROFILES: String = "Profiles"
+        const val SYSTEM: String = "system"
+        // -> Main Database Structure
         const val USERS: String = "users"
-        const val LOCATIONS: String = "locations"
-        const val FOODTRUCKS: String = "foodtrucks"
+        const val ORGANIZATIONS: String = "organizations"
+        const val REVIEWS: String = "reviews"
 
         /**
-         * sports - organizations(sport) - organization(id) - coaches - coach(id)
-         * profiles - users - user(type)
-         * Reviews - review(id)
+         * organizations - organization(id)
+         * users - user(id)
+         * reviews - review(id)
          *
          */
-        //City
-        const val AREAS: String = "areas"
-        const val ALABAMA: String = "alabama"
-        const val BIRMINGHAM: String = "birmingham"
-//        const val MONTH: String? = null
-        const val SPOTS: String = "spots"
-
-        //Reviews
-        const val REVIEWS: String = "Reviews" //Reviews -> UserUUID -> ReviewUUID -> Review Obj
-
     }
+}
 
-    /** Essentially, have the Spots, Locations, etc from Firebase
-     * loaded in the background into the "session" accordingly **/
-//LAMBA FUNCTION -> Shortcut for firebase.database calls
+//// Verified
+//inline fun firebase(block: (DatabaseReference) -> Unit) {
+//    block(FirebaseDatabase.getInstance().reference)
+//}
+//
+//// Untested
+//fun <T> DataSnapshot.toClass(clazz: Class<T>): T? {
+//    return this.getValue(clazz)
+//}
+
+fun getFirebaseUser(): FirebaseUser? {
+    return FirebaseAuth.getInstance().currentUser
+}
+
+//works but the timing is off.
+suspend fun getAllDB(collection: String) : DataSnapshot? {
+    var result: DataSnapshot? = null
+    ioLaunch {
+        firebase {
+            it.child(collection)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        result = dataSnapshot
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        log("Failed")
+                    }
+                })
+        }
+    }
+    return result
+}
+
+//untested
+fun getDB(collection: String, id: String) : DataSnapshot? {
+    var result: DataSnapshot? = null
+    firebase {
+        it.child(collection).child(id)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    result = dataSnapshot
+                }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    log("Failed")
+                }
+            })
+    }
+    return result
 
 }
 
-inline fun firebase(block: (DatabaseReference) -> Unit) {
-    block(FirebaseDatabase.getInstance().reference)
-}
-
-fun addOrganization(org:Organization) {
+// Verified
+fun addUpdateDB(collection: String, id: String, obj: Any): Boolean {
+    var result = false
     firebase { database ->
-        database.child("organizations")
-            .setValue(org)
+        database.child(collection).child(id)
+            .setValue(obj)
             .addOnSuccessListener {
                 //TODO("HANDLE SUCCESS")
-                Session.addOrganization(org)
-//                fragment?.let { showSuccess(it.requireContext(), "Organiztion Added!") }
+                result = true
             }.addOnCompleteListener {
                 //TODO("HANDLE COMPLETE")
             }.addOnFailureListener {
                 //TODO("HANDLE FAILURE")
-//                fragment?.let { showFailedToast(it.requireContext()) }
+                result = false
             }
     }
-
+    return result
 }

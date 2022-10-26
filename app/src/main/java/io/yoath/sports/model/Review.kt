@@ -27,29 +27,13 @@ import java.util.*
 open class Review : RealmObject() {
     @PrimaryKey
     var id: String = ""
+    var ownerId: String = ""
     var score: Int = 999 // score 1 or 10
     var type: String? = ""
     var details: String = "" //
     var questions: RealmList<String>? = null
 }
 
-fun Review.addUpdateToFirebase(mContext:Context, spot: Spot? = null) {
-    val database: DatabaseReference?
-    database = FirebaseDatabase.getInstance().reference
-    database.child(FireHelper.REVIEWS)
-        .child(AuthController.USER_AUTH).child(AuthController.USER_UID)
-        .child(this.id).setValue(this)
-        .addOnSuccessListener {
-            //TODO("HANDLE SUCCESS")
-            showSuccess(mContext)
-            spot?.addUpdateToFirebase(mContext)
-        }.addOnCompleteListener {
-            //TODO("HANDLE COMPLETE")
-        }.addOnFailureListener {
-            //TODO("HANDLE FAILURE")
-            showFailedToast(mContext)
-        }
-}
 
 fun createReviewDialog(activity: Activity, spot: Spot? = null) : Dialog {
 
@@ -96,11 +80,11 @@ fun createReviewDialog(activity: Activity, spot: Spot? = null) : Dialog {
             this.reviewScore = score
             this.reviewDetails = details
         }?.addUpdateToFirebase(mContext = activity)
-        Review().apply {
-            this.id = uid
-            this.score = score
-            this.details = details
-        }.addUpdateToFirebase(mContext = activity, spot = spot)
+//        Review().apply {
+//            this.id = uid
+//            this.score = score
+//            this.details = details
+//        }.addUpdateToFirebase(mContext = activity, spot = spot)
         dialog.dismiss()
     }
     cancel.setOnClickListener {

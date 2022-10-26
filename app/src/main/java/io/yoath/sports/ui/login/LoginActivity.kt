@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
     //Ask for auth first -> if null add waiting
     private fun getUserAuthFromFirebase(currentUser: User) {
         database = FirebaseDatabase.getInstance().reference
-        database.child(FireHelper.PROFILES).child(FireHelper.USERS).child(currentUser.uid)
+        database.child(FireHelper.USERS).child(currentUser.id.toString())
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val user: User? = dataSnapshot.getValue(User::class.java)
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
 
     //SAVE PROFILE
     fun saveProfileToFirebase() {
-        database.child(FireHelper.PROFILES).child(FireHelper.USERS).child(mUser.uid).setValue(mUser)
+        database.child(FireHelper.USERS).child(mUser.id.toString()).setValue(mUser)
             .addOnSuccessListener {
 //                TODO("HANDLE SUCCESS")
                 Session.updateUser(mUser)
@@ -114,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
                     val email = fireUser?.email
                     val name = fireUser?.displayName
                     val user = User()
-                    user.uid = uid
+                    user.id = uid
                     user.email = email
                     user.name = name
                     mUser = user

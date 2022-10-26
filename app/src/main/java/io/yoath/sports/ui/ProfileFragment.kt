@@ -14,13 +14,11 @@ import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
 import io.yoath.sports.utils.getSpinnerForFoodTruckType
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.android.synthetic.main.fragment_user_profile.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.util.*
 
 /**
  * Created by ChazzCoin : 2020.
@@ -155,7 +153,7 @@ class ProfileFragment : Fragment() {
 
                     //-> BOTH
                     val newUser = User().apply {
-                        this.uid = AuthController.USER_UID
+                        this.id = AuthController.USER_ID
                         this.auth = AuthController.USER_AUTH
                         this.name = rootView.editProfileName.text.toString()
                         this.email = rootView.editEmail.text.toString()

@@ -29,7 +29,7 @@ import kotlinx.coroutines.SupervisorJob
 class AuthController : AppCompatActivity()  {
 
     companion object {
-        var USER_UID = ""
+        var USER_ID = ""
         var USER_AUTH = ""
     }
 
@@ -37,7 +37,7 @@ class AuthController : AppCompatActivity()  {
     private lateinit var database: DatabaseReference
     val main = CoroutineScope(Dispatchers.IO + SupervisorJob())
     var mUser : User? = null
-    lateinit var uid : String
+    lateinit var id : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,20 +53,23 @@ class AuthController : AppCompatActivity()  {
             .deleteRealmIfMigrationNeeded()
             .build()
         Realm.setDefaultConfiguration(realmConfiguration)
+//        Realm.deleteRealm(realmConfiguration)
+//        Realm.setDefaultConfiguration(realmConfiguration)
         //Finally . . .
+//        Session.deleteUser()
+//        Session.deleteAll()
         doSetup()
+//        startActivity(Intent(this@AuthController, LoginActivity::class.java))
     }
 
     private fun doSetup() {
-        val u = Session.user?.uid
+        val u = Session.user?.id
         if (Session.session != null && Session.user != null && !u.isNullOrEmpty()){
             mUser = Session.user
             mUser?.let { itUser ->
-                uid = itUser.uid
-                USER_UID = itUser.uid
+                id = itUser.id.toString()
+                USER_ID = itUser.id.toString()
                 USER_AUTH = itUser.auth
-                //Init Cart
-                createCart()
                 getProfileUpdatesFirebase()
             }
         } else {
@@ -88,14 +91,14 @@ class AuthController : AppCompatActivity()  {
 
     private fun getProfileUpdatesFirebase() {
         database = FirebaseDatabase.getInstance().reference
-        database.child(FireHelper.PROFILES).child(FireHelper.USERS).child(uid)
+        database.child(FireHelper.USERS).child(id)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val temp: User? = dataSnapshot.getValue(User::class.java) as User?
                     temp?.let { it ->
-                        if (it.uid == uid){
+                        if (it.id == id){
                             USER_AUTH = it.auth.toString()
-                            USER_UID = it.uid
+                            USER_ID = it.id.toString()
                             Session.updateUser(it)
                             navigateUser(it)
                         }

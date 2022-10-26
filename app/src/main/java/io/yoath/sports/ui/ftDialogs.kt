@@ -6,13 +6,10 @@ import android.graphics.Color
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import io.yoath.sports.AuthController
 import io.yoath.sports.R
 import io.yoath.sports.model.*
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.dialog_ask_user_logout.*
 import kotlinx.android.synthetic.main.dialog_field_error.*
-import java.util.*
 
 
 /**
@@ -214,7 +211,7 @@ fun createProfileDialog(activity: Activity, user: User) : Dialog {
 
                 //-> BOTH
                 val newUser = User().apply {
-                    this.uid = user.uid
+                    this.id = user.id
                     this.auth = user.auth
                     this.name = editProfileName.text.toString()
                     this.email = editEmail.text.toString()

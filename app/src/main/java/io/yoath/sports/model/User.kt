@@ -4,13 +4,12 @@ import android.content.Context
 import androidx.room.PrimaryKey
 import com.google.firebase.database.*
 import io.yoath.sports.AuthController
-import io.yoath.sports.utils.FireHelper
-import io.yoath.sports.utils.showFailedToast
-import io.yoath.sports.utils.showSuccess
 import io.realm.Realm
+import io.realm.RealmModel
 import io.realm.RealmObject
 import io.yoath.sports.model.AuthTypes.Companion.BASIC_USER
 import io.yoath.sports.model.AuthTypes.Companion.COACH_USER
+import io.yoath.sports.utils.*
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -30,16 +29,24 @@ open class AuthTypes {
     }
 }
 
-open class User(uid:String = "", name:String? = "", email:String? = "") : RealmObject() {
+open class User : RealmObject() {
 
     @PrimaryKey
-    var uid = "" // SETUP VIA FIREBASE TO LINK TO AUTH SYSTEM
-    var name: String? = ""
+    var id: String? = null // SETUP VIA FIREBASE TO LINK TO AUTH SYSTEM
+    var creationDate: String? = null
+    var name: String? = "" //Name Given by Manager
+    var auth: String = AuthTypes.BASIC_USER // "basic"
+    var type: String? = ""
     var email: String? = ""
-    var auth: String = BASIC_USER // "basic"
     var phone: String? = ""
     var organization: String? = ""
     var visibility: String = "closed"
+
+    init {
+        if (creationDate.isNullOrBlank()) {
+            creationDate = DateUtils().getCurrentDayTime()
+        }
+    }
 
     fun isCoachUser() : Boolean {
         if (this.auth == COACH_USER) return true
@@ -50,14 +57,14 @@ open class User(uid:String = "", name:String? = "", email:String? = "") : RealmO
         return false
     }
 
-    fun equals(user: User) : Boolean {
-        if (this.uid == user.uid &&
-                this.name == user.name &&
-                this.auth == user.auth &&
-                this.email == user.email &&
-                this.phone == user.phone) return true
-        return false
-    }
+//    fun equals(user: User) : Boolean {
+//        if (this.id == user.id &&
+//                this.name == user.name &&
+//                this.auth == user.auth &&
+//                this.email == user.email &&
+//                this.phone == user.phone) return true
+//        return false
+//    }
 
 }
 
@@ -94,9 +101,9 @@ fun getProfileUpdatesFirebase(mContext: Context, uid:String) {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val temp: User? = dataSnapshot.getValue(User::class.java)
                 temp?.let {
-                    if (it.uid == uid){
+                    if (it.id == uid){
                         AuthController.USER_AUTH = it.auth.toString()
-                        AuthController.USER_UID = it.uid
+                        AuthController.USER_ID = it.id!!
 //                        it.getFoodtrucksFromFirebase(mContext)
                         Session.updateUser(it)
                     }
@@ -112,7 +119,7 @@ fun User.addUpdateToFirebase(mContext: Context) {
     val database = FirebaseDatabase.getInstance().reference
     database.child(FireHelper.PROFILES)
         .child(FireHelper.USERS)
-        .child(AuthController.USER_UID)
+        .child(AuthController.USER_ID)
         .setValue(this)
         .addOnSuccessListener {
             //success

@@ -96,6 +96,17 @@ class DateUtils {
         return java.lang.Long.valueOf(0)
     }
 
+    fun getCurrentDayTime(): String? {
+        val current: Locale = Locale.US
+        return try {
+            val formatter = SimpleDateFormat(format_DATE_TIME, current)
+            formatter.timeZone = TimeZone.getDefault()
+            formatter.format(Calendar.getInstance().time)
+        } catch (e: Exception) {
+            SimpleDateFormat(format_DATE_TIME, current)
+                .format(Calendar.getInstance().time)
+        }
+    }
     fun getCurrentDay(): String? {
         val current: Locale = Locale.US
         return try {

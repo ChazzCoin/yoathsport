@@ -84,10 +84,18 @@ open class Session : RealmObject() {
             }
         }
 
+        fun deleteUser() {
+            executeRealm { it.delete(User::class.java) }
+        }
+
+        fun deleteAll() {
+            executeRealm { it.deleteAll() }
+        }
+
         fun updateUser(newNser: User){
             val curUser = user
             executeRealm { itRealm ->
-                curUser?.uid = newNser.uid
+                curUser?.id = newNser.id
                 curUser?.auth = newNser.auth
                 curUser?.name = newNser.name
                 curUser?.email = newNser.email

@@ -1,9 +1,14 @@
 package io.yoath.sports.utils
 
 import android.app.Activity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import io.yoath.sports.model.*
 import io.realm.Realm
 import io.realm.RealmList
+import io.realm.RealmObject
+import kotlin.reflect.KClass
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -20,6 +25,16 @@ fun <T> RealmList<T>?.toMutableList() : MutableList<T> {
     return listOfT
 }
 
+fun <K, V> HashMap<K, V>?.toRealmList() : RealmList<Any> {
+    val listOfT = RealmList<Any>()
+    this?.let {
+        for ((_,value) in it) {
+            listOfT.add(value as? Any)
+        }
+    }
+    return listOfT
+}
+
 
 fun realm() : Realm {
     return Realm.getDefaultInstance()
@@ -28,6 +43,16 @@ fun realm() : Realm {
 //LAMBA FUNCTION -> Shortcut for realm().executeTransaction{ }
 inline fun executeRealm(crossinline block: (Realm) -> Unit) {
     realm().executeTransaction { block(it) }
+}
+
+// Verified
+inline fun firebase(block: (DatabaseReference) -> Unit) {
+    block(FirebaseDatabase.getInstance().reference)
+}
+
+// Untested
+fun <T> DataSnapshot.toClass(clazz: Class<T>): T? {
+    return this.getValue(clazz)
 }
 
 

@@ -8,12 +8,8 @@ import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.yoath.sports.R
-import io.yoath.sports.model.Spot.Companion.AVAILABLE
-import io.yoath.sports.model.Spot.Companion.PENDING
-import io.yoath.sports.model.Spot.Companion.PENDING_CASHAPP
 import io.yoath.sports.utils.*
 import io.realm.RealmObject
-import io.yoath.sports.db.firebase
 import kotlinx.android.synthetic.main.dialog_spot_details.*
 import java.text.SimpleDateFormat
 import java.util.*

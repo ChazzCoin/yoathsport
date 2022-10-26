@@ -11,7 +11,6 @@ import io.yoath.sports.model.createDeleteLocationDialog
 import io.yoath.sports.utils.inflate
 import io.realm.RealmList
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_list_locations.view.*
 
 
 class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFragment)
@@ -23,7 +22,7 @@ class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerLocationViewHolder {
         reloadLocations()
-        return InnerLocationViewHolder(parent.inflate(R.layout.item_list_locations), locManageFragment = locManageFragment)
+        return InnerLocationViewHolder(parent.inflate(R.layout.item_list_organization), locManageFragment = locManageFragment)
     }
 
     override fun onBindViewHolder(viewHolder: InnerLocationViewHolder, position: Int) {
@@ -59,23 +58,23 @@ class LocManageViewAdapter(mContext: Context, val locManageFragment: LocManageFr
         RecyclerView.ViewHolder(containerView), LayoutContainer  {
 
         fun bind(organization: Organization) {
-            containerView.itemLocationName.text = organization.name
-            containerView.txtAddressOne.text = organization.addressOne
-            containerView.txtAddressTwo.text = organization.addressTwo
-            containerView.txtCityStateZip.text = "${organization.city}, ${organization.state}, ${organization.zip}"
-            containerView.txtPeople.text = organization.estPeople
-
-            containerView.btnAddEditLocationManage.setOnClickListener {
-                locManageFragment.toggleButtons()
-                if (locManageFragment.MODE == locManageFragment._EDIT) {
-                    locManageFragment.fillAllFields(organization)
-                } else {
-                    locManageFragment.clearAllFields()
-                }
-            }
-            containerView.btnMinusLocationManage.setOnClickListener {
-                organization.createDeleteLocationDialog(locManageFragment).show()
-            }
+//            containerView.itemLocationName.text = organization.name
+//            containerView.txtAddressOne.text = organization.addressOne
+//            containerView.txtAddressTwo.text = organization.addressTwo
+//            containerView.txtCityStateZip.text = "${organization.city}, ${organization.state}, ${organization.zip}"
+//            containerView.txtPeople.text = organization.estPeople
+//
+//            containerView.btnAddEditLocationManage.setOnClickListener {
+//                locManageFragment.toggleButtons()
+//                if (locManageFragment.MODE == locManageFragment._EDIT) {
+//                    locManageFragment.fillAllFields(organization)
+//                } else {
+//                    locManageFragment.clearAllFields()
+//                }
+//            }
+//            containerView.btnMinusLocationManage.setOnClickListener {
+//                organization.createDeleteLocationDialog(locManageFragment).show()
+//            }
         }
 
     }

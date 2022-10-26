@@ -1,44 +1,65 @@
 
 package io.yoath.sports.ui
 
-import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import io.realm.RealmList
 import io.yoath.sports.R
+import io.yoath.sports.model.Organization
+import io.yoath.sports.model.getTextView
+import io.yoath.sports.utils.getSafe
+import io.yoath.sports.utils.getSafeString
+import io.yoath.sports.utils.log
+import org.json.JSONObject
 
 
-class ListAdapter: RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+open class BaseListAdapter(var realmList: RealmList<Any>? = null, var layout: Int = R.layout.item_list_organization): RecyclerView.Adapter<OrgViewHolder>() {
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_cart, parent, false)
-        return ViewHolder(convertView = view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrgViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
+        return OrgViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return 0
+        return realmList?.size ?: 0
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OrgViewHolder, position: Int) {
         println("binding hookup")
+        realmList?.let {
+            it[position]?.let { it1 -> holder.bind(it1 as JSONObject) }
+        }
     }
 
-    open class ViewHolder(convertView: View) : RecyclerView.ViewHolder(convertView) {
-        //-> LEFT (TO)
-//        val textTitle = itemView.findViewById<TextView>(R.id.txtTitle)
-//        val textDate = itemView.findViewById<TextView>(R.id.txtPublishedDate)
-//        val textSource = itemView.findViewById<TextView>(R.id.txtSource)
-//        val imgUrl = itemView.findViewById<ImageView>(R.id.imgUrl)
-//        val btnSaveIcon = itemView.findViewById<ImageButton>(R.id.btnSaveIcon)
+}
 
-        fun bind(obj: Any, context: Context?) {
-            return obj as Unit
-        }
+class OrgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    /**
+     * itemLocationName
+     * detailsLinearLayout
+     * addressLinearLayout
+     * txtAddressOne
+     * txtAddressTwo
+     * txtCityStateZip
+     * txtPeople
+     * btnAddEditLocationManage
+     * btnMinusLocationManage
+     */
+
+    var txtOrgName = itemView.findViewById<TextView>(R.id.itemLocationName)
+    var txtAddressOne = itemView.getTextView(R.id.txtAddressOne)
+
+//    fun bind(org: Organization) {
+//        txtOrgName.text = org.name
+//        txtAddressOne.text = org.id
+//    }
+
+    fun bind(org: JSONObject) {
+        txtOrgName.text = org.getSafeString("name")
+        txtAddressOne.text = org.getSafeString("id")
     }
 }
 
