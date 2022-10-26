@@ -11,28 +11,42 @@ import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.realm.RealmList
+import io.realm.RealmModel
 import io.yoath.sports.AuthController
 import io.yoath.sports.R
-import io.yoath.sports.utils.FireHelper
-import io.yoath.sports.utils.makeGone
-import io.yoath.sports.utils.showFailedToast
-import io.yoath.sports.utils.showSuccess
 import io.realm.RealmObject
+import io.yoath.sports.utils.*
 import kotlinx.android.synthetic.main.dialog_review_layout.*
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by ChazzCoin : Feb 2021.
  */
 open class Review : RealmObject() {
     @PrimaryKey
-    var id: String = ""
-    var ownerId: String = ""
+    var id: String? = null
+    var ownerId: String? = null
     var score: Int = 999 // score 1 or 10
-    var type: String? = ""
-    var details: String = "" //
-    var questions: RealmList<String>? = null
+    var type: String? = null
+    var details: String? = null //
+    var questions: RealmList<Question>? = null
 }
+
+open class Question: RealmObject() {
+    @PrimaryKey
+    var id: String? = null
+    var question: String? = null
+    var choices: RealmList<String>? = null
+    var answer: String? = null
+
+    init {
+        if (this.id.isNullOrBlank()) {
+            this.id = newUUID()
+        }
+    }
+}
+
 
 
 fun createReviewDialog(activity: Activity, spot: Spot? = null) : Dialog {
@@ -41,12 +55,12 @@ fun createReviewDialog(activity: Activity, spot: Spot? = null) : Dialog {
     dialog.setContentView(R.layout.dialog_review_layout)
     dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-    if (spot != null) {
-        dialog.txtSpotNameReview.text = "Spot Location: ${spot?.locationName}"
-        dialog.txtSpotDateReview.text = "Spot Date: ${spot?.date}"
-    } else {
-        dialog.layoutReviewTitleBody.makeGone()
-    }
+//    if (spot != null) {
+//        dialog.txtSpotNameReview.text = "Spot Location: ${spot?.locationName}"
+//        dialog.txtSpotDateReview.text = "Spot Date: ${spot?.date}"
+//    } else {
+//        dialog.layoutReviewTitleBody.makeGone()
+//    }
 
     //Extra Settings
     val goodCheck = dialog.findViewById(R.id.checkLunchProfile) as CheckBox

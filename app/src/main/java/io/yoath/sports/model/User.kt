@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.firebase.database.*
 import io.yoath.sports.AuthController
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.RealmObject
 import io.yoath.sports.model.AuthTypes.Companion.BASIC_USER
@@ -41,6 +42,8 @@ open class User : RealmObject() {
     var phone: String? = ""
     var organization: String? = ""
     var visibility: String = "closed"
+
+    var reviews: RealmList<String>? = null
 
     init {
         if (creationDate.isNullOrBlank()) {

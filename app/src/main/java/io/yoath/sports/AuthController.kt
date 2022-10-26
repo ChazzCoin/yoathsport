@@ -116,7 +116,7 @@ class AuthController : AppCompatActivity()  {
                 startActivity(Intent(this@AuthController, MainBasicUserActivity::class.java))
             }
             AuthTypes.COACH_USER -> {
-                startActivity(Intent(this@AuthController, MainLocationManagerActivity::class.java))
+                startActivity(Intent(this@AuthController, MainBasicUserActivity::class.java))
             }
             else -> {
                 Toast.makeText(this, "Pending User Approval", Toast.LENGTH_LONG).show()

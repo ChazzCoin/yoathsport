@@ -3,6 +3,7 @@ package io.yoath.sports.db
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import io.realm.RealmObject
 import io.yoath.sports.utils.firebase
 import io.yoath.sports.utils.ioLaunch
 import io.yoath.sports.utils.log
@@ -84,6 +85,25 @@ fun getDB(collection: String, id: String) : DataSnapshot? {
     }
     return result
 
+}
+
+// Verified
+fun <T> T.addUpdateInFirebase(collection: String, id: String): Boolean {
+    var result = false
+    firebase { database ->
+        database.child(collection).child(id)
+            .setValue(this)
+            .addOnSuccessListener {
+                //TODO("HANDLE SUCCESS")
+                result = true
+            }.addOnCompleteListener {
+                //TODO("HANDLE COMPLETE")
+            }.addOnFailureListener {
+                //TODO("HANDLE FAILURE")
+                result = false
+            }
+    }
+    return result
 }
 
 // Verified

@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import io.yoath.sports.R
 import io.yoath.sports.model.Organization
-import io.yoath.sports.model.addUpdateLocationToFirebase
-import io.yoath.sports.utils.createFieldErrorDialog
 import kotlinx.android.synthetic.main.fragment_locations.view.*
 import java.util.*
 

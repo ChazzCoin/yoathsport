@@ -5,9 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.PrimaryKey
 import com.google.firebase.database.DatabaseReference
@@ -45,6 +43,12 @@ open class Organization : RealmObject(), Serializable {
     var staff: RealmList<String>? = null
     var estPeople: String? = ""
 
+    var reviews: RealmList<String>? = null
+
+    fun getCityStateZip(): String {
+        return "$city, $state $zip"
+    }
+
 
     fun matches(org: Organization) : Boolean {
         if (this.id == org.id &&
@@ -60,47 +64,7 @@ open class Organization : RealmObject(), Serializable {
 
 }
 
-fun View.getTextView(res: Int) : TextView {
-    return this.findViewById(res)
-}
 
-fun View.getRecyclerView(res: Int) : RecyclerView {
-    return this.findViewById(res)
-}
-
-fun View.getImageButton(res: Int) : ImageButton {
-    return this.findViewById(res)
-}
-
-fun View.getButton(res: Int) : Button {
-    return this.findViewById(res)
-}
-
-fun View.getLinearLayout(res: Int) : LinearLayout {
-    return this.findViewById(res)
-}
-
-//class OrgViewHolder(itemView: View) : BaseViewHolder(itemView) {
-//    /**
-//     * itemLocationName
-//     * detailsLinearLayout
-//     * addressLinearLayout
-//     * txtAddressOne
-//     * txtAddressTwo
-//     * txtCityStateZip
-//     * txtPeople
-//     * btnAddEditLocationManage
-//     * btnMinusLocationManage
-//     */
-//
-//    var txtOrgName = itemView.findViewById<TextView>(R.id.itemLocationName)
-//    var txtAddressOne = itemView.getTextView(R.id.txtAddressOne)
-//
-//    fun bind(org: Organization) {
-//        txtOrgName.text = org.name
-//        txtAddressOne.text = org.id
-//    }
-//}
 
 fun RecyclerView.initRealmList(realmList: RealmList<Any>, context: Context) : BaseListAdapter {
     val adapter = BaseListAdapter(realmList)
@@ -109,18 +73,9 @@ fun RecyclerView.initRealmList(realmList: RealmList<Any>, context: Context) : Ba
     return adapter
 }
 
-fun HashMap<*,*>.toOrgRealmList(): RealmList<Any> {
-    var resultList: RealmList<Any> = RealmList()
-    for ((_,v) in this) {
-        val test = (v as? HashMap<*,*>)?.toJSON()
-        resultList.add(test)
-    }
-    return resultList
-}
-
-private fun <E> RealmList<E>.add(element: JSONObject?) {
-    this.add(element as? E)
-}
+//private fun <E> RealmList<E>.add(element: JSONObject?) {
+//    this.add(element as? E)
+//}
 
 fun Organization.createDeleteLocationDialog(fragment: LocManageFragment) : Dialog {
     val dialog = Dialog(fragment.requireActivity())
@@ -142,25 +97,6 @@ fun Organization.createDeleteLocationDialog(fragment: LocManageFragment) : Dialo
     return dialog
 }
 
-//-> SAVE location object to firebase
-fun Organization.addUpdateLocationToFirebase(fragment: LocManageFragment? = null) {
-    Log.d("Location: ", "addUpdateLocationToFirebase")
-    val database: DatabaseReference?
-    database = FirebaseDatabase.getInstance().reference
-    database.child(FireHelper.PROFILES).child(FireHelper.LOCATIONS)
-        .child(AuthController.USER_ID).child(this.id.toString())
-        .setValue(this)
-        .addOnSuccessListener {
-            //TODO("HANDLE SUCCESS")
-            fragment?.reloadLocAdapter()
-            fragment?.let { showSuccess(it.requireContext(), "Location Added!") }
-        }.addOnCompleteListener {
-            //TODO("HANDLE COMPLETE")
-        }.addOnFailureListener {
-            //TODO("HANDLE FAILURE")
-            fragment?.let { showFailedToast(it.requireContext()) }
-        }
-}
 
 fun Organization.removeFromFirebase(fragment: LocManageFragment? = null) {
     Log.d("Location: ", "removeFromFirebase")

@@ -59,7 +59,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         userOrLogout(requireActivity()) {
             user = it
-            setup(it)
+//            setup(it)
         }
 
         //-> Global On Click Listeners
@@ -70,7 +70,9 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        getOrganizations()
+//        createReview()
+        getCoaches()
+//        getOrganizations()
         return rootView
     }
 
@@ -87,7 +89,27 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
                         result?.getSafe("name")
-                        val resultList = result?.toOrgRealmList()
+                        val resultList = result?.toJsonRealmList()
+                        resultList?.let { itRL ->
+                            recyclerViewDashboard.initRealmList(itRL, requireContext())
+                        }
+                        log(resultList.toString())
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        log("Failed")
+                    }
+                })
+        }
+    }
+
+    private fun getCoaches() {
+        firebase { it ->
+            it.child(FireDB.USERS).orderByChild("auth").equalTo("coach")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
+                        result?.getSafe("name")
+                        val resultList = result?.toJsonRealmList()
                         resultList?.let { itRL ->
                             recyclerViewDashboard.initRealmList(itRL, requireContext())
                         }
@@ -107,12 +129,12 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
             this.score = 4
             this.details = "us soccer"
             this.questions = RealmList(
-                "Are you satisfied?",
-                "Does this coach work well with kids?",
-                "Does this coach work well with parents?",
-                "Is this coach Chace Zanaty?")
+                Question().apply { this.question = "Are you satisfied?" },
+                Question().apply { this.question = "Does this coach work well with kids?" },
+                Question().apply { this.question = "Does this coach work well with parents?" },
+                Question().apply { this.question = "Is this coach Chace Zanaty?" })
         }
-        addUpdateDB(FireDB.REVIEWS, rev.id, rev)
+        addUpdateDB(FireDB.REVIEWS, rev.id!!, rev)
     }
 
     private fun createFirstOrg() {
@@ -126,12 +148,12 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         addUpdateDB(FireDB.ORGANIZATIONS, org.id.toString(), org)
     }
 
-    private fun setup(user: User) {
-        if (AuthController.USER_AUTH == AuthTypes.BASIC_USER) { //FoodTruck Manager
-            //setup User
-            println("to be setup...")
-        }
-    }
+//    private fun setup(user: User) {
+//        if (AuthController.USER_AUTH == AuthTypes.BASIC_USER) { //FoodTruck Manager
+//            //setup User
+//            println("to be setup...")
+//        }
+//    }
 
 
     /** Location Manager Spinner On Click Listener **/

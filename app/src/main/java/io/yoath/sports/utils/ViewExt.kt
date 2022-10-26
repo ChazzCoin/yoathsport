@@ -14,6 +14,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by ChazzCoin : December 2019.
@@ -40,6 +41,25 @@ import androidx.core.content.ContextCompat
 //    adapter.addListOfTickers(listOfTickers)
 //    return adapter
 //}
+fun View.getTextView(res: Int) : TextView {
+    return this.findViewById(res)
+}
+
+fun View.getRecyclerView(res: Int) : RecyclerView {
+    return this.findViewById(res)
+}
+
+fun View.getImageButton(res: Int) : ImageButton {
+    return this.findViewById(res)
+}
+
+fun View.getButton(res: Int) : Button {
+    return this.findViewById(res)
+}
+
+fun View.getLinearLayout(res: Int) : LinearLayout {
+    return this.findViewById(res)
+}
 
 fun View.makeVisible() {
     visibility = View.VISIBLE

@@ -8,6 +8,8 @@ import io.yoath.sports.model.*
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.yoath.sports.db.FireDB
+import io.yoath.sports.db.addUpdateDB
 import kotlin.reflect.KClass
 
 /**
@@ -35,6 +37,14 @@ fun <K, V> HashMap<K, V>?.toRealmList() : RealmList<Any> {
     return listOfT
 }
 
+fun HashMap<*,*>.toJsonRealmList(): RealmList<Any> {
+    var resultList: RealmList<Any> = RealmList()
+    for ((_,v) in this) {
+        val test = (v as? HashMap<*,*>)?.toJSON()
+        resultList.add(test)
+    }
+    return resultList
+}
 
 fun realm() : Realm {
     return Realm.getDefaultInstance()
@@ -49,6 +59,14 @@ inline fun executeRealm(crossinline block: (Realm) -> Unit) {
 inline fun firebase(block: (DatabaseReference) -> Unit) {
     block(FirebaseDatabase.getInstance().reference)
 }
+
+// in progress
+//inline fun <T> T.applyAndSave(block: T.() -> Unit): T {
+//    this.apply {
+//        block()
+//    }
+//    addUpdateDB(FireDB.REVIEWS, rev.id!!, this)
+//}
 
 // Untested
 fun <T> DataSnapshot.toClass(clazz: Class<T>): T? {
