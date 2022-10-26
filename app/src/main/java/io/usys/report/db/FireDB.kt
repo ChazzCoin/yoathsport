@@ -3,6 +3,9 @@ package io.usys.report.db
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import io.usys.report.model.Session
+import io.usys.report.model.Sport
+import io.usys.report.model.Spot
 import io.usys.report.utils.firebase
 import io.usys.report.utils.ioLaunch
 import io.usys.report.utils.log
@@ -25,6 +28,7 @@ class FireDB {
         const val USERS: String = "users"
         const val ORGANIZATIONS: String = "organizations"
         const val REVIEWS: String = "reviews"
+        const val SPORTS: String = "sports"
 
         /**
          * organizations - organization(id)
@@ -69,24 +73,27 @@ suspend fun getAllDB(collection: String) : DataSnapshot? {
 }
 
 //untested
-fun getDB(collection: String, id: String) : DataSnapshot? {
-    var result: DataSnapshot? = null
+fun getSports() {
     firebase {
-        it.child(collection).child(id)
+        it.child(FireDB.SPORTS)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    result = dataSnapshot
+                    for (ds in dataSnapshot.children) {
+                        val sport: Sport? = ds.getValue(Sport::class.java)
+                        sport?.let {
+                            Session.addSport(it)
+                        }
+                    }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
                     log("Failed")
                 }
             })
     }
-    return result
 
 }
 
-// Verified
+// unverified
 fun <T> T.addUpdateInFirebase(collection: String, id: String): Boolean {
     var result = false
     firebase { database ->

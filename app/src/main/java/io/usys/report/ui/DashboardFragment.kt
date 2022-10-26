@@ -68,9 +68,8 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 createAskUserLogoutDialog(requireActivity()).show()
             }
         }
-
-//        createReview()
-        getCoaches()
+        Session.removeAllSports()
+//        getCoaches()
 //        getOrganizations()
         return rootView
     }
@@ -122,7 +121,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun createReview() {
-        var rev = Review()
+        val rev = Review()
         rev.apply {
             this.id = newUUID()
             this.score = 4
@@ -137,7 +136,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun createFirstOrg() {
-        var org = Organization()
+        val org = Organization()
         org.apply {
             this.id = newUUID()
             this.sport = "soccer"
@@ -147,13 +146,14 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         addUpdateDB(FireDB.ORGANIZATIONS, org.id.toString(), org)
     }
 
-//    private fun setup(user: User) {
-//        if (AuthController.USER_AUTH == AuthTypes.BASIC_USER) { //FoodTruck Manager
-//            //setup User
-//            println("to be setup...")
-//        }
-//    }
-
+    private fun createSport() {
+        val sport = Sport()
+        sport.apply {
+            this.id = newUUID()
+            this.name = "soccer"
+        }
+        addUpdateDB(FireDB.SPORTS, sport.id.toString(), sport)
+    }
 
     /** Location Manager Spinner On Click Listener **/
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

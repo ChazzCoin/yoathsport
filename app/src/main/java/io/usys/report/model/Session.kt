@@ -21,6 +21,7 @@ open class Session : RealmObject() {
     var sessionId = 0
 
     //DO NOT MAKE STATIC
+    var sports: RealmList<Sport>? = RealmList()
     var organizations: RealmList<Organization>? = RealmList()
 
     /** -> EVERYTHING IS STATIC BELOW THIS POINT <- **/
@@ -73,6 +74,21 @@ open class Session : RealmObject() {
                 executeRealm { it.insertOrUpdate(itSession) }
             }
             return session
+        }
+
+        fun createObjects() {
+            val realm = Realm.getDefaultInstance()
+            if (realm.where(User::class.java) == null){
+                realm.executeTransaction { itRealm ->
+                    itRealm.createObject(User::class.java)
+                }
+            }
+            realm.executeTransaction { itRealm ->
+                itRealm.createObject(Sport::class.java)
+                itRealm.createObject(Organization::class.java)
+                itRealm.createObject(Review::class.java)
+            }
+
         }
 
         fun createUser() {
@@ -163,9 +179,8 @@ open class Session : RealmObject() {
                 mRealm.where(Session::class.java).findAll().deleteAllFromRealm()
                 mRealm.where(User::class.java).findAll().deleteAllFromRealm()
                 mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
-                mRealm.where(Organization::class.java).findAll().deleteAllFromRealm()
-                mRealm.where(Cart::class.java).findAll().deleteAllFromRealm()
-                mRealm.where(Spot::class.java).findAll().deleteAllFromRealm()
+                mRealm.where(Sport::class.java).findAll().deleteAllFromRealm()
+                mRealm.where(Review::class.java).findAll().deleteAllFromRealm()
             }
         }
 
@@ -178,7 +193,40 @@ open class Session : RealmObject() {
 
         /** -> LOCATIONS <- **/
 
-        //ADD LOCATION, this should be safe
+        //ADD SPORT, this should be safe
+        fun addSport(sport: Sport?) {
+            if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
+            val session = session
+            session?.let { itSession ->
+                mRealm.beginTransaction()
+                if (itSession.sports.isNullOrEmpty()) {
+                    itSession.sports = RealmList(sport)
+                } else {
+                    itSession.sports?.let {
+                        if (!it.contains(sport)) {
+                            it.add(sport)
+                        }
+                    }
+                }
+                mRealm.copyToRealmOrUpdate(session) //safe?
+                mRealm.commitTransaction()
+            }
+        }
+
+        //REMOVE ALL LOCATIONS
+        fun removeAllSports() {
+            if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
+            val session = session
+            session?.let { itSession ->
+                mRealm.beginTransaction()
+                itSession.sports?.clear()
+                mRealm.where(Sport::class.java).findAll().deleteAllFromRealm()
+                mRealm.copyToRealmOrUpdate(session) //safe?
+                mRealm.commitTransaction()
+            }
+        }
+
+        //ADD ORGANIZATION, this should be safe
         fun addOrganization(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
@@ -190,7 +238,7 @@ open class Session : RealmObject() {
             }
         }
 
-        //REMOVE LOCATION
+        //REMOVE ORGANIZATION
         fun removeOrganization(organization: Organization?) {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session

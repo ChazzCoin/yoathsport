@@ -73,7 +73,7 @@ class AuthController : AppCompatActivity()  {
             }
         } else {
             //Create User Object (checks if null)
-            Session.createUser()
+            Session.createObjects()
             startActivity(Intent(this@AuthController, LoginActivity::class.java))
         }
     }
