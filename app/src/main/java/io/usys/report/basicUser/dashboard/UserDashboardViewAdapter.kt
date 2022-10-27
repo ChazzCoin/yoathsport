@@ -16,7 +16,7 @@ class UserDashboardViewAdapter(mContext: Context) : RecyclerView.Adapter<UserDas
 //    var context = mContext
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerSpotViewHolder {
-        return InnerSpotViewHolder(parent.inflate(R.layout.item_list_food_spots))
+        return InnerSpotViewHolder(parent.inflate(R.layout.item_list_sports_two))
     }
 
     override fun onBindViewHolder(viewHolder: InnerSpotViewHolder, position: Int) {

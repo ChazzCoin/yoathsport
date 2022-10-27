@@ -26,8 +26,6 @@ open class Session : RealmObject() {
 
     /** -> EVERYTHING IS STATIC BELOW THIS POINT <- **/
     companion object {
-        //SpotController
-
         //UserController
         private const val WAITING = "waiting"
 
@@ -65,6 +63,7 @@ open class Session : RealmObject() {
             }
             private set
 
+        //CORE ->
         fun updateSession(user: User?): Session? {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             //Guest guest = SessionsController.getSession().getGuest();
@@ -76,14 +75,10 @@ open class Session : RealmObject() {
             return session
         }
 
+        //CORE ->
         fun createObjects() {
-            val realm = Realm.getDefaultInstance()
-            if (realm.where(User::class.java) == null){
-                realm.executeTransaction { itRealm ->
-                    itRealm.createObject(User::class.java)
-                }
-            }
-            realm.executeTransaction { itRealm ->
+            createUser()
+            executeRealm { itRealm ->
                 itRealm.createObject(Sport::class.java)
                 itRealm.createObject(Organization::class.java)
                 itRealm.createObject(Review::class.java)
@@ -91,6 +86,7 @@ open class Session : RealmObject() {
 
         }
 
+        //CORE ->
         fun createUser() {
             val realm = Realm.getDefaultInstance()
             if (realm.where(User::class.java) == null){
@@ -100,10 +96,12 @@ open class Session : RealmObject() {
             }
         }
 
+        //CORE ->
         fun deleteUser() {
             executeRealm { it.delete(User::class.java) }
         }
 
+        //CORE ->
         fun deleteAll() {
             executeRealm { it.deleteAll() }
         }
@@ -120,45 +118,7 @@ open class Session : RealmObject() {
             }
         }
 
-//        fun updateSpotAsPendingForFirebase(id:String, status: String,
-//                                           assignedTruckUid: String, assignedTruckName: String){
-//            spots { session, spots ->
-//                for (s in spots) {
-//                    if (s.id == id) {
-//                        executeRealm {
-//                            s.assignedTruckName = assignedTruckName
-//                            s.assignedTruckUid = assignedTruckUid
-//                            s.status = status
-//                            it.insertOrUpdate(session)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
-//        fun updateSpotAsBookedForFirebase(id:String) {
-//            spots { session, spots ->
-//                executeRealm { itRealm ->
-//                    val s = spots.find { it.id == id }
-//                    s?.status = Spot.BOOKED
-//                    itRealm.insertOrUpdate(session)
-//                }
-//            }
-//        }
-
-//        fun updateSpotAsAvailableForFirebase(id:String) {
-//            spots { session, spots ->
-//                executeRealm {
-//                    val s = spots.find { it.id == id }
-//                    s?.assignedTruckName = ""
-//                    s?.assignedTruckUid = ""
-//                    s?.status = Spot.AVAILABLE
-//                    it.insertOrUpdate(session)
-//                }
-//            }
-//        }
-
-        //CHECK IS USER IS LOGGED IN
+        //CORE -> CHECK IS USER IS LOGGED IN
         val isLogged: Boolean
             get() {
                 if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
@@ -172,7 +132,7 @@ open class Session : RealmObject() {
                 return false
             }
 
-        //LOG CURRENT USER OUT
+        //CORE -> LOG CURRENT USER OUT
         fun logOut() {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             mRealm.executeTransaction {
@@ -184,14 +144,14 @@ open class Session : RealmObject() {
             }
         }
 
-        //SYSTEM RESTART THE APP
+        //CORE -> SYSTEM RESTART THE APP
         fun restartApplication(context: Activity) {
             logOut()
             ActivityCompat.finishAffinity(context)
             context.startActivity(Intent(context, AuthController::class.java))
         }
 
-        /** -> LOCATIONS <- **/
+        /** -> OBJECT MODEL HELPERS <- **/
 
         //ADD SPORT, this should be safe
         fun addSport(sport: Sport?) {
@@ -200,12 +160,17 @@ open class Session : RealmObject() {
             session?.let { itSession ->
                 mRealm.beginTransaction()
                 if (itSession.sports.isNullOrEmpty()) {
-                    itSession.sports = RealmList(sport)
+                    itSession.sports = RealmList()
+                    itSession.sports?.add(sport)
                 } else {
                     itSession.sports?.let {
-                        if (!it.contains(sport)) {
-                            it.add(sport)
+                        var containsSport = false
+                        for (item in it) {
+                            if (item.name == sport?.name) {
+                                containsSport = true
+                            }
                         }
+                        if (!containsSport) it.add(sport)
                     }
                 }
                 mRealm.copyToRealmOrUpdate(session) //safe?
@@ -213,7 +178,7 @@ open class Session : RealmObject() {
             }
         }
 
-        //REMOVE ALL LOCATIONS
+        //REMOVE ALL SPORT
         fun removeAllSports() {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
@@ -250,8 +215,8 @@ open class Session : RealmObject() {
             }
         }
 
-        //REMOVE ALL LOCATIONS
-        fun removeAllLocations() {
+        //REMOVE ALL ORGANIZATION
+        fun removeAllOrganization() {
             if (mRealm == null) { mRealm = Realm.getDefaultInstance() }
             val session = session
             session?.let { itSession ->
@@ -273,23 +238,6 @@ open class Session : RealmObject() {
                 it.commitTransaction()
             }
         }
-
-
-//        //SET SPOT LIST
-//        fun setListOfSpots() {
-//            try {
-//                if (mRealm == null) {
-//                    mRealm = Realm.getDefaultInstance()
-//                }
-//                mRealm?.let {
-//                    val spotsResults = it.where(Spot::class.java).equalTo("spotManager", AuthController.USER_UID).findAll()
-//                    listOfSpots.addAll(spotsResults.subList(0, spotsResults.size))
-//                }
-//
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
 
     }
 }

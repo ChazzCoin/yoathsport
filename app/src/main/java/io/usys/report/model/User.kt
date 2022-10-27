@@ -59,15 +59,6 @@ open class User : RealmObject() {
         return false
     }
 
-//    fun equals(user: User) : Boolean {
-//        if (this.id == user.id &&
-//                this.name == user.name &&
-//                this.auth == user.auth &&
-//                this.email == user.email &&
-//                this.phone == user.phone) return true
-//        return false
-//    }
-
 }
 
 fun updateUser(newUser: User) {

@@ -33,6 +33,13 @@ fun io() : CoroutineScope {
     return CoroutineScope(Dispatchers.IO + SupervisorJob())
 }
 
+/** -> TRIED AND TRUE! <- */
+inline fun io(crossinline block: suspend CoroutineScope.() -> Unit) {
+    CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+        block(this)
+    }
+}
+
 fun Any?.isNullOrEmpty() : Boolean {
     if (this == null) return true
     when (this) {

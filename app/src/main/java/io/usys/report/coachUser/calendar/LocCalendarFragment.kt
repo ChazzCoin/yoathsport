@@ -33,7 +33,6 @@ import io.usys.report.utils.*
 import io.realm.RealmList
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.calendar_day_legend.view.*
-import kotlinx.android.synthetic.main.item_list_food_spots.view.*
 import kotlinx.android.synthetic.main.spot_calendar_day.view.*
 import kotlinx.android.synthetic.main.spot_calendar_fragment.*
 import kotlinx.android.synthetic.main.spot_calendar_fragment.view.*
@@ -437,7 +436,7 @@ class SpotCalendarAdapterLocation(var activity: Activity) : //val onClick: (Spot
     var spots = mutableListOf<Spot>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpotsViewHolderLocation {
-        return SpotsViewHolderLocation(parent.inflate(R.layout.item_list_food_spots), activity)
+        return SpotsViewHolderLocation(parent.inflate(R.layout.item_list_sports_two), activity)
     }
 
     override fun onBindViewHolder(viewHolder: SpotsViewHolderLocation, position: Int) {
@@ -455,10 +454,10 @@ class SpotCalendarAdapterLocation(var activity: Activity) : //val onClick: (Spot
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(spot: Spot) {
-            containerView.txtItemSpotName.text = spot.locationName
-            containerView.txtItemDate.text = spot.toFullDate()
-            containerView.txtItemEstPeople.text = spot.estPeople
-            containerView.txtItemCost.text = spot.toFullPrice()
+//            containerView.txtItemSpotName.text = spot.locationName
+//            containerView.txtItemDate.text = spot.toFullDate()
+//            containerView.txtItemEstPeople.text = spot.estPeople
+//            containerView.txtItemCost.text = spot.toFullPrice()
 
             containerView.setOnClickListener {
                 spot.createDetailsLocationDialog(activity = activity).show()

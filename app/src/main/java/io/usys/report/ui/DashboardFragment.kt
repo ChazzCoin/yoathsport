@@ -42,6 +42,7 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var eSpinAdapter : ArrayAdapter<String?>
     private var spotAdapter : LocDashViewAdapter? = null
     private var organizationList : RealmList<Organization> = RealmList() // -> ORIGINAL LIST
+    private var sportList : RealmList<Sport> = RealmList()
     private var organizationMap : HashMap<Int, Organization> = HashMap()
     private var finalOrganization : Organization? = null
 
@@ -68,30 +69,52 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 createAskUserLogoutDialog(requireActivity()).show()
             }
         }
-        Session.removeAllSports()
-//        getCoaches()
-//        getOrganizations()
+
+        io { getEm2() }
+//        session {
+//            sportList = it.sports!!
+//            rootView.recyclerViewDashboard.initRealmList(sportList, requireContext(), FireDB.SPORTS)
+//        }
+//        getOrganizations2()
         return rootView
     }
 
-    //not working
-    private suspend fun getOrganizations2() {
-        val test = getAllDB(FireDB.ORGANIZATIONS)
-        log(test.toString())
+    private fun getEm2(): RealmList<Organization> {
+        val orgListResults = getOrganizationsBlocked()
+        log("just received SIZE OF ORG LIST !!!! ${orgListResults.size}")
+        if (!orgListResults.isNullOrEmpty()) {
+            main {
+                (orgListResults as? RealmList<*>)?.let {
+                    rootView.recyclerViewDashboard.initRealmList(
+                        it, requireContext(), FireTypes.ORGANIZATIONS)
+                }
+            }
+        }
+        log("returning SIZE OF ORG LIST !!!! ${orgListResults.size}")
+        return orgListResults
     }
 
-    private fun getOrganizations() {
+    private suspend fun getEm(): RealmList<*> {
+        val orgListResults = getOrgsAsync().await()
+        if (!orgListResults.isNullOrEmpty()) {
+            main {
+                rootView.recyclerViewDashboard.initRealmList(orgListResults, requireContext(), FireTypes.ORGANIZATIONS)
+            }
+        }
+        return orgListResults
+    }
+
+    private fun getOrganizations2() {
         firebase { it ->
             it.child(FireDB.ORGANIZATIONS)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
-                        result?.getSafe("name")
-                        val resultList = result?.toJsonRealmList()
-                        resultList?.let { itRL ->
-                            recyclerViewDashboard.initRealmList(itRL, requireContext())
+                        for (ds in dataSnapshot.children) {
+                            val org: Organization? = ds.getValue(Organization::class.java)
+                            org?.let {
+                                Session.addOrganization(it)
+                            }
                         }
-                        log(resultList.toString())
                     }
                     override fun onCancelled(databaseError: DatabaseError) {
                         log("Failed")
@@ -100,25 +123,28 @@ class DashboardFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun getCoaches() {
-        firebase { it ->
-            it.child(FireDB.USERS).orderByChild("auth").equalTo("coach")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
-                        result?.getSafe("name")
-                        val resultList = result?.toJsonRealmList()
-                        resultList?.let { itRL ->
-                            recyclerViewDashboard.initRealmList(itRL, requireContext())
-                        }
-                        log(resultList.toString())
-                    }
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        log("Failed")
-                    }
-                })
-        }
-    }
+
+
+
+//    private fun getCoaches() {
+//        firebase { it ->
+//            it.child(FireDB.USERS).orderByChild("auth").equalTo("coach")
+//                .addListenerForSingleValueEvent(object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        val result = dataSnapshot.value as? HashMap<*, *> // <ID, <String, Any>>
+//                        result?.getSafe("name")
+//                        val resultList = result?.toJsonRealmList()
+//                        resultList?.let { itRL ->
+//                            recyclerViewDashboard.initRealmList(itRL, requireContext())
+//                        }
+//                        log(resultList.toString())
+//                    }
+//                    override fun onCancelled(databaseError: DatabaseError) {
+//                        log("Failed")
+//                    }
+//                })
+//        }
+//    }
 
     private fun createReview() {
         val rev = Review()

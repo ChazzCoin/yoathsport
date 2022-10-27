@@ -8,7 +8,6 @@ import io.usys.report.R
 import io.usys.report.model.Spot
 import io.usys.report.utils.inflate
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_list_food_spots.view.*
 
 class FoodCalendarViewAdapter(var activity: Activity, val fragment: FoodCalendarFragment) : RecyclerView.Adapter<FoodCalendarViewAdapter.InnerFoodCalendarViewHolder>() {
 
@@ -17,7 +16,7 @@ class FoodCalendarViewAdapter(var activity: Activity, val fragment: FoodCalendar
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerFoodCalendarViewHolder {
         return InnerFoodCalendarViewHolder(
-            parent.inflate(R.layout.item_list_food_spots),
+            parent.inflate(R.layout.item_list_sports_two),
             activity,
             fragment
         )
@@ -55,10 +54,10 @@ class FoodCalendarViewAdapter(var activity: Activity, val fragment: FoodCalendar
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(spot: Spot) {
-            containerView.txtItemSpotName.text = spot.locationName
-            containerView.txtItemDate.text = spot.toFullDate()
-            containerView.txtItemEstPeople.text = spot.estPeople
-            containerView.txtItemCost.text = spot.toFullPrice()
+//            containerView.txtItemSpotName.text = spot.locationName
+//            containerView.txtItemDate.text = spot.toFullDate()
+//            containerView.txtItemEstPeople.text = spot.estPeople
+//            containerView.txtItemCost.text = spot.toFullPrice()
 
 //            containerView.setOnClickListener {
 //                spot.createDetailsFoodtruckDialog(

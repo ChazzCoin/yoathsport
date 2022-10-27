@@ -10,7 +10,6 @@ import io.usys.report.model.*
 import io.usys.report.utils.inflate
 import io.realm.RealmList
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_list_food_spots.view.*
 
 class LocDashViewAdapter(mContext: Context, var activity: Activity, var locationId: String)
     : RecyclerView.Adapter<LocDashViewAdapter.InnerDashViewHolder>() {
@@ -24,7 +23,7 @@ class LocDashViewAdapter(mContext: Context, var activity: Activity, var location
     var context = mContext
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerDashViewHolder {
-        return InnerDashViewHolder(parent.inflate(R.layout.item_list_food_spots), activity)
+        return InnerDashViewHolder(parent.inflate(R.layout.item_list_sports_two), activity)
     }
 
     override fun onBindViewHolder(viewHolder: InnerDashViewHolder, position: Int) {
@@ -53,10 +52,10 @@ class LocDashViewAdapter(mContext: Context, var activity: Activity, var location
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(spot: Spot) {
-            containerView.txtItemSpotName.text = spot.locationName
-            containerView.txtItemDate.text = spot.toFullDate()
-            containerView.txtItemEstPeople.text = spot.estPeople
-            containerView.txtItemCost.text = spot.toFullPrice()
+//            containerView.txtItemSpotName.text = spot.locationName
+//            containerView.txtItemDate.text = spot.toFullDate()
+//            containerView.txtItemEstPeople.text = spot.estPeople
+//            containerView.txtItemCost.text = spot.toFullPrice()
 
             containerView.setOnClickListener {
                 spot.createDetailsLocationDialog(activity = activity).show()

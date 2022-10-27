@@ -61,15 +61,6 @@ open class Organization : RealmObject(), Serializable {
 
 }
 
-
-
-fun RecyclerView.initRealmList(realmList: RealmList<Any>, context: Context) : BaseListAdapter {
-    val adapter = BaseListAdapter(realmList)
-    this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    this.adapter = adapter
-    return adapter
-}
-
 //private fun <E> RealmList<E>.add(element: JSONObject?) {
 //    this.add(element as? E)
 //}
